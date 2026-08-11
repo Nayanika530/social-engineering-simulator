@@ -1,0 +1,10 @@
+﻿venv/
+__pycache__/
+*.pyc
+models/generator/
+models/generator_onnx/
+models/generator_quantized/
+data/enron_spam_data.csv
+data/enron_cleaned.csv
+data/Phishing_Email.csv
+.env

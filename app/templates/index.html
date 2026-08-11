@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LLM Social Engineering Attack Simulator</title>
+</head>
+<body>
+    <h1>Social Engineering Attack Simulator</h1>
+
+    <div>
+        <label>Scenario:</label>
+        <input type="text" id="scenario" placeholder="e.g. IT password reset">
+    </div>
+    <div>
+        <label>Target Role:</label>
+        <input type="text" id="target_role" placeholder="e.g. Finance Manager">
+    </div>
+    <div>
+        <label>Company:</label>
+        <input type="text" id="company" placeholder="e.g. Acme Corp">
+    </div>
+
+    <button onclick="generateAttack()">Generate Attack</button>
+
+    <div id="result" style="margin-top: 20px;"></div>
+
+    <script>
+        async function generateAttack() {
+            const scenario = document.getElementById("scenario").value;
+            const target_role = document.getElementById("target_role").value;
+            const company = document.getElementById("company").value;
+
+            document.getElementById("result").innerHTML = "Generating...";
+
+            const response = await fetch("/generate_attack", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ scenario, target_role, company })
+            });
+
+            const data = await response.json();
+
+            document.getElementById("result").innerHTML = `
+                <h3>Generated Email:</h3>
+                <p>${data.generated_email}</p>
+                <h3>Threat Assessment:</h3>
+                <p>${data.threat_level} (${data.confidence}% confidence)</p>
+            `;
+        }
+    </script>
+</body>
+</html>
