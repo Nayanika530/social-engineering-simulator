@@ -1,9 +1,9 @@
-﻿from flask import Flask, render_template, request, jsonify
+﻿import os
+from flask import Flask, render_template, request, jsonify
 import joblib
 import json
 import random
 import psutil
-import os
 app = Flask(__name__)
 print("Loading pre-generated email samples...")
 with open("data/pregenerated_emails.json", "r", encoding="utf-8") as f:
@@ -24,7 +24,6 @@ def generate_attack():
     scenario = data.get("scenario", "")
     target_role = data.get("target_role", "")
     company = data.get("company", "")
-    # Pick a random pre-generated sample, then personalize it with the user's actual inputs
     sample = random.choice(samples)
     generated_email = sample["email"]
     if target_role:
@@ -42,4 +41,5 @@ def generate_attack():
         "confidence": round(confidence_score, 2)
     })
 if __name__ == "__main__":
-    app.run(debug=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
