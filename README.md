@@ -1,6 +1,6 @@
 ﻿# LLM-Powered Social Engineering Attack Simulator
 A two-part AI system that simulates the offense/defense dynamic in phishing attacks: a fine-tuned language model generates realistic social engineering emails, and a separately trained classifier scores their threat level in real time.
-**Live demo:** https://social-engineering-simulator-opt1.onrender.com
+**Website live at:** https://social-engineering-simulator-opt1.onrender.com
 ## How it works
 - Generator (System 1): GPT-2 fine-tuned on 5,594 real phishing emails to write scenario-specific social engineering attacks (target role, company, and context configurable by the user).
 - Classifier (System 2): TF-IDF + Logistic Regression trained on 17,537 labeled phishing/legitimate emails. Achieves 97.75 percent accuracy on held-out test data.
