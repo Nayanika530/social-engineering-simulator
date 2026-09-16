@@ -1,4 +1,4 @@
-﻿import os
+import os
 from flask import Flask, render_template, request, jsonify
 import joblib
 import json
@@ -40,6 +40,24 @@ def generate_attack():
         "threat_level": threat_level,
         "confidence": round(confidence_score, 2)
     })
+
+@app.route("/classify_text", methods=["POST"])
+def classify_text():
+    data = request.json or {}
+    email_text = data.get("email_text", "").strip()
+    if not email_text:
+        return jsonify({"error": "No email text provided"}), 400
+    email_vec = vectorizer.transform([email_text])
+    prediction = classifier_model.predict(email_vec)[0]
+    confidence = classifier_model.predict_proba(email_vec)[0]
+    threat_level = "Phishing" if prediction == 1 else "Safe"
+    confidence_score = float(max(confidence)) * 100
+    return jsonify({
+        "generated_email": email_text,
+        "threat_level": threat_level,
+        "confidence": round(confidence_score, 2)
+    })
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
