@@ -154,24 +154,28 @@ function initThemeSwitch() {
    ========================================================================== */
 const timelineData = [
   {
-    title: "1. Persona & Scenario Config",
-    desc: "Attack parameters configured dynamically: attacker impersonates trusted departmental entities (e.g. IT, HR, Finance) and tailors target role context."
+    title: "1. Scenario & Target Configuration",
+    desc: "Target role, organization, and scenario parameters defined (Password Reset, Wire Transfer, Cloud SSO, HR Benefits)."
   },
   {
-    title: "2. GPT-2 Language Generator",
-    desc: "Fine-tuned on 5,594 real phishing emails to craft convincing, contextually accurate spearphishing messages matching attacker psychological levers."
+    title: "2. Attack Template Selection",
+    desc: "Retrieves matching pre-generated attack templates from the fine-tuned GPT-2 library based on the configured scenario."
   },
   {
-    title: "3. TF-IDF N-Gram Vectorizer",
-    desc: "Extracts sub-word lexical patterns and n-gram vectors across 17,537 training vocabulary items to map subtle semantic markers."
+    title: "3. Target Personalization",
+    desc: "Dynamically substitutes role and company placeholders into the selected attack template at runtime."
   },
   {
-    title: "4. Logistic Regression Classifier",
-    desc: "Evaluates transformed sparse vector weights with 97.75% held-out test accuracy, balancing high precision against deceptive linguistic tactics."
+    title: "4. TF-IDF Feature Extraction",
+    desc: "Transforms the personalized email text into sparse n-gram lexical feature vectors across the 5,000-feature vocabulary."
   },
   {
-    title: "5. Real-Time Threat Score",
-    desc: "Produces calibrated threat probability (<200ms latency on warm instance), categorizing the email as High-Risk Phishing or Legitimate Communication with confidence rating."
+    title: "5. Logistic Regression Classification",
+    desc: "Evaluates transformed feature weights using the trained Logistic Regression model (97.75% benchmark test accuracy)."
+  },
+  {
+    title: "6. Threat Assessment",
+    desc: "Outputs classifier prediction (PHISHING DETECTED or NO PHISHING SIGNAL DETECTED) and probability confidence score."
   }
 ];
 
@@ -198,21 +202,21 @@ const codeSnippets = {
 import requests
 
 response = requests.post("https://social-engineering-simulator-opt1.onrender.com/generate_attack", json={
-    "scenario": "password reset",
+    "scenario": "Password Reset",
     "target_role": "Finance Manager",
     "company": "Acme Corp"
 })
 
 result = response.json()
 print("Threat Level:", result["threat_level"])
-print("Confidence:", result["confidence"], "%")
+print("Classifier Confidence:", result["confidence"], "%")
 print("Generated Payload:\\n", result["generated_email"])`,
 
   curl: `# Note: Free-tier instance may take 20-50s to respond on the first request after being idle (cold start).
 curl -X POST https://social-engineering-simulator-opt1.onrender.com/generate_attack \\
   -H "Content-Type: application/json" \\
   -d '{
-    "scenario": "urgent wire transfer",
+    "scenario": "Wire Transfer",
     "target_role": "Finance Director",
     "company": "Global Retail Inc"
   }'`,
@@ -222,7 +226,7 @@ const res = await fetch('https://social-engineering-simulator-opt1.onrender.com/
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    scenario: 'account verification',
+    scenario: 'Cloud SSO',
     target_role: 'DevOps Lead',
     company: 'FinTech Dynamics'
   })
@@ -231,12 +235,12 @@ const res = await fetch('https://social-engineering-simulator-opt1.onrender.com/
 const data = await res.json();
 console.log(\`[\${data.threat_level}] \${data.confidence}%\`);`,
 
-  sklearn: `# Underlying Scikit-Learn Model Pipeline
+  sklearn: `# Underlying Scikit-Learn Model Pipeline (5,000 features)
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 import joblib
 
-vectorizer = joblib.load("models/classifier_vectorizer.pkl")
+vectorizer = joblib.load("models/classifier_vectorizer.pkl")  # max_features=5000
 classifier = joblib.load("models/classifier_model.pkl")
 
 email_vec = vectorizer.transform([email_text])
@@ -298,7 +302,7 @@ function applyPreset(scenario, role, company) {
 
 // Generate Attack API Call
 async function generateAttack() {
-  const scenario = (document.getElementById("scenario")?.value || "password reset").trim();
+  const scenario = (document.getElementById("scenario")?.value || "Password Reset").trim();
   const target_role = (document.getElementById("target_role")?.value || "Finance Manager").trim();
   const company = (document.getElementById("company")?.value || "Acme Corp").trim();
 
@@ -314,8 +318,9 @@ async function generateAttack() {
   const confidenceBar = document.getElementById("confidenceBar");
   const confidenceVal = document.getElementById("confidenceVal");
   const emailContent = document.getElementById("emailContent");
-  const metaRecipient = document.getElementById("metaRecipient");
-  const metaSubject = document.getElementById("metaSubject");
+  const simScenarioVal = document.getElementById("simScenarioVal");
+  const simTargetVal = document.getElementById("simTargetVal");
+  const simOrgVal = document.getElementById("simOrgVal");
   const vectorName = document.getElementById("vectorName");
   const profileRole = document.getElementById("profileRole");
   const profileCompany = document.getElementById("profileCompany");
@@ -323,12 +328,13 @@ async function generateAttack() {
   if (resultSection) {
     resultSection.style.display = "block";
     if (statusBadge) statusBadge.className = "report-status-badge";
-    if (threatStatusText) threatStatusText.textContent = "Simulating Attack & Evaluating...";
+    if (threatStatusText) threatStatusText.textContent = "Selecting Template & Classifying...";
     if (confidenceBar) confidenceBar.style.width = "0%";
-    if (confidenceVal) confidenceVal.textContent = "...";
-    if (emailContent) emailContent.innerHTML = '<span style="color: var(--body-muted); font-style: italic;">Generating attack payload with fine-tuned GPT-2 and evaluating TF-IDF probability...</span>';
-    if (metaRecipient) metaRecipient.textContent = `${target_role} <${target_role.toLowerCase().replace(/[^a-z0-9]/g, '.')}@${company.toLowerCase().replace(/[^a-z0-9]/g, '')}.com>`;
-    if (metaSubject) metaSubject.textContent = `Urgent Notice: ${scenario} - ${company}`;
+    if (confidenceVal) confidenceVal.textContent = "--%";
+    if (emailContent) emailContent.innerHTML = '<span style="color: var(--body-muted); font-style: italic;">Selecting pre-generated attack template, applying target personalization, and extracting TF-IDF features...</span>';
+    if (simScenarioVal) simScenarioVal.textContent = scenario;
+    if (simTargetVal) simTargetVal.textContent = target_role;
+    if (simOrgVal) simOrgVal.textContent = company;
     if (vectorName) vectorName.textContent = scenario;
     if (profileRole) profileRole.textContent = target_role;
     if (profileCompany) profileCompany.textContent = company;
@@ -395,20 +401,23 @@ async function classifyCustomText() {
       const isPhishing = data.threat_level === "Phishing";
       if (isPhishing) {
         directBadge.className = "report-status-badge badge-phishing";
-        directBadge.innerHTML = '<span class="dot"></span><span>Phishing Threat</span>';
+        directBadge.innerHTML = '<span class="dot"></span><span>PHISHING DETECTED</span>';
       } else {
         directBadge.className = "report-status-badge badge-safe";
-        directBadge.innerHTML = '<span class="dot"></span><span>Safe / Legitimate</span>';
+        directBadge.innerHTML = '<span class="dot"></span><span>NO PHISHING SIGNAL DETECTED</span>';
       }
-      directConf.textContent = data.confidence + "%";
+      directConf.textContent = "Classifier confidence: " + data.confidence + "%";
     }
 
     // 2. Also populate the full threat assessment result card
     renderResults({
       generated_email: emailText,
       threat_level: data.threat_level,
-      confidence: data.confidence
-    }, "Raw Email Direct Scan", "Direct Target", "Enterprise Gateway");
+      confidence: data.confidence,
+      scenario: "Direct Text Input",
+      target_role: "Direct Target",
+      company: "Direct Scan"
+    }, "Direct Text Input", "Direct Target", "Direct Scan");
 
   } catch (err) {
     alert("Error classifying email: " + err.message);
@@ -426,9 +435,9 @@ function renderResults(data, scenario, target_role, company) {
   const confidenceBar = document.getElementById("confidenceBar");
   const confidenceVal = document.getElementById("confidenceVal");
   const emailContent = document.getElementById("emailContent");
-  const metaSender = document.getElementById("metaSender");
-  const metaRecipient = document.getElementById("metaRecipient");
-  const metaSubject = document.getElementById("metaSubject");
+  const simScenarioVal = document.getElementById("simScenarioVal");
+  const simTargetVal = document.getElementById("simTargetVal");
+  const simOrgVal = document.getElementById("simOrgVal");
   const vectorName = document.getElementById("vectorName");
   const profileRole = document.getElementById("profileRole");
   const profileCompany = document.getElementById("profileCompany");
@@ -438,11 +447,11 @@ function renderResults(data, scenario, target_role, company) {
   if (statusBadge && threatStatusText) {
     if (isPhishing) {
       statusBadge.className = "report-status-badge badge-phishing";
-      threatStatusText.textContent = "High-Risk Spearphishing Threat";
+      threatStatusText.textContent = "PHISHING DETECTED";
       if (confidenceBar) confidenceBar.style.backgroundColor = "#ef4444";
     } else {
       statusBadge.className = "report-status-badge badge-safe";
-      threatStatusText.textContent = "Legitimate / Safe Communication";
+      threatStatusText.textContent = "NO PHISHING SIGNAL DETECTED";
       if (confidenceBar) confidenceBar.style.backgroundColor = "#10b981";
     }
   }
@@ -451,17 +460,14 @@ function renderResults(data, scenario, target_role, company) {
   if (confidenceBar) confidenceBar.style.width = conf + "%";
   if (confidenceVal) confidenceVal.textContent = conf + "%";
 
-  const cleanCompany = (company || "Acme Corp").toLowerCase().replace(/[^a-z0-9]/g, '');
-  const cleanRole = (target_role || "User").toLowerCase().replace(/[^a-z0-9]/g, '.');
-
-  if (metaSender) metaSender.textContent = `Security Gateway <alerts@${cleanCompany}-security.org>`;
-  if (metaRecipient) metaRecipient.textContent = `${target_role} <${cleanRole}@${cleanCompany}.com>`;
-  if (metaSubject) metaSubject.textContent = `Urgent Notice: ${scenario} - ${company}`;
+  if (simScenarioVal) simScenarioVal.textContent = data.scenario || scenario || "--";
+  if (simTargetVal) simTargetVal.textContent = data.target_role || target_role || "--";
+  if (simOrgVal) simOrgVal.textContent = data.company || company || "--";
   if (emailContent) emailContent.textContent = data.generated_email || "";
 
-  if (vectorName) vectorName.textContent = scenario;
-  if (profileRole) profileRole.textContent = target_role;
-  if (profileCompany) profileCompany.textContent = company;
+  if (vectorName) vectorName.textContent = data.scenario || scenario || "--";
+  if (profileRole) profileRole.textContent = data.target_role || target_role || "--";
+  if (profileCompany) profileCompany.textContent = data.company || company || "--";
 
   if (resultSection) {
     resultSection.style.display = "block";

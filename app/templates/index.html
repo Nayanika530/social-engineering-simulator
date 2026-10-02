@@ -4,13 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <title>Social Engineering Attack Simulator & Threat Detector</title>
-  <meta name="description" content="Dual-system AI platform: fine-tuned language models generate realistic social engineering attacks, and real-time machine learning classifies threat probability in milliseconds." />
+  <meta name="description" content="Dual-system AI platform: pre-generated attack library fine-tuned on phishing data, personalized at runtime with real-time machine learning threat scoring." />
   <meta property="og:title" content="Social Engineering Simulator & Threat Detector" />
   <meta property="og:description" content="Simulate, analyze, and detect social engineering and phishing attacks with dual-system AI." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=3.0" />
+  <link rel="stylesheet" href="/static/css/style.css?v=3.1" />
 </head>
 <body>
   <div class="page-wrapper">
@@ -106,7 +106,7 @@
         </h1>
 
         <p class="hero-subheadline">
-          Simulate the dynamic offense/defense reality in modern phishing attacks: a fine-tuned language model generates realistic corporate spearphishing attacks, while a high-precision ML classifier evaluates threat probability in real time.
+          Simulate the dynamic offense/defense reality in modern phishing attacks: pre-generated GPT-2 attack outputs personalized at runtime, while a high-precision ML classifier evaluates threat probability.
         </p>
       </div>
 
@@ -125,15 +125,15 @@
                 </svg>
               </div>
               <h3 class="auth-card-title">Direct Vector Scanner</h3>
-              <p class="auth-card-subtitle">Score any raw email against 17,537 trained vectors</p>
+              <p class="auth-card-subtitle">Score raw email text using TF-IDF (5,000 features) + Logistic Regression</p>
             </div>
 
             <div class="form-group">
               <label class="form-label" for="customEmailText">
                 <span>Raw Email Body</span>
-                <span style="font-family: var(--font-mono); font-size: 10px; color: var(--body-muted);">TF-IDF n-grams</span>
+                <span style="font-family: var(--font-mono); font-size: 10px; color: var(--body-muted);">TF-IDF 5k Features</span>
               </label>
-              <textarea id="customEmailText" class="form-textarea" placeholder="Paste incoming email headers or message body here to evaluate threat probability..."></textarea>
+              <textarea id="customEmailText" class="form-textarea" placeholder="Paste incoming email message body here to evaluate threat probability..."></textarea>
             </div>
 
             <button id="btnClassify" class="btn-outline" type="button" onclick="classifyCustomText()">
@@ -147,7 +147,7 @@
                 <span id="directThreatBadge" class="report-status-badge"></span>
                 <span id="directConfidenceVal" class="direct-conf-val"></span>
               </div>
-              <p class="direct-result-note">Evaluated directly against 17,537 TF-IDF vector weights</p>
+              <p class="direct-result-note">Evaluated using TF-IDF (5,000 features) + Logistic Regression</p>
             </div>
 
             <p style="font-size: 11.5px; color: var(--body-muted); text-align: center; margin-top: 4px;">
@@ -156,7 +156,7 @@
           </div>
         </div>
 
-        <!-- CARD 2 (CENTER ACTIVE): Attack Simulator -->
+        <!-- CARD 2 (CENTER ACTIVE): Attack Template Library -->
         <div class="auth-card card-center auth-card-animated" id="simCard" style="--brand-color: #663AF3;">
           <div class="auth-card-content">
             <div class="auth-card-header">
@@ -165,14 +165,14 @@
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                 </svg>
               </div>
-              <h3 class="auth-card-title">Simulate Targeted Attack</h3>
-              <p class="auth-card-subtitle">Fine-tuned GPT-2 generator + real-time ML defense</p>
+              <h3 class="auth-card-title">Attack Template Library</h3>
+              <p class="auth-card-subtitle">Pre-generated GPT-2 attack outputs personalized at runtime</p>
             </div>
 
             <!-- Inputs -->
             <div class="form-group">
               <label class="form-label" for="scenario">Attack Scenario</label>
-              <input type="text" id="scenario" class="form-input" placeholder="e.g. password reset" value="password reset" autocomplete="off" />
+              <input type="text" id="scenario" class="form-input" placeholder="e.g. Password Reset" value="Password Reset" autocomplete="off" />
             </div>
 
             <div class="form-group">
@@ -185,23 +185,23 @@
               <input type="text" id="company" class="form-input" placeholder="e.g. Acme Corp" value="Acme Corp" autocomplete="off" />
             </div>
 
-            <!-- Quick Presets matching data/pregenerated_emails.json exactly -->
+            <!-- Quick Presets matching supported scenarios -->
             <div class="presets-wrap">
               <span class="presets-label">Quick Attack Presets:</span>
               <div class="preset-pills">
-                <button class="preset-pill" type="button" onclick="applyPreset('password reset', 'Security Analyst', 'Apex Financial')">
+                <button class="preset-pill" type="button" onclick="applyPreset('Password Reset', 'Security Analyst', 'Apex Financial')">
                   🔐 Password Reset
                 </button>
-                <button class="preset-pill" type="button" onclick="applyPreset('urgent wire transfer', 'Finance Director', 'Global Retail Inc')">
+                <button class="preset-pill" type="button" onclick="applyPreset('Wire Transfer', 'Finance Director', 'Global Retail Inc')">
                   💸 Wire Transfer
                 </button>
-                <button class="preset-pill" type="button" onclick="applyPreset('software license renewal', 'DevOps Lead', 'CloudScale Technologies')">
-                  📋 Software License
+                <button class="preset-pill" type="button" onclick="applyPreset('Cloud SSO', 'DevOps Lead', 'FinTech Dynamics')">
+                  ☁️ Cloud SSO
                 </button>
-                <button class="preset-pill" type="button" onclick="applyPreset('account verification', 'Senior Engineer', 'FinTech Dynamics')">
-                  ✅ Account Verification
+                <button class="preset-pill" type="button" onclick="applyPreset('HR Benefits', 'Senior Engineer', 'CloudScale Technologies')">
+                  👥 HR Benefits
                 </button>
-                <button class="preset-pill" type="button" onclick="applyPreset('invoice payment', 'Accounts Payable', 'Nexus Manufacturing')">
+                <button class="preset-pill" type="button" onclick="applyPreset('Invoice Payment', 'Accounts Payable', 'Nexus Manufacturing')">
                   💰 Invoice Payment
                 </button>
               </div>
@@ -210,7 +210,7 @@
             <button id="btnGenerate" class="btn-primary" type="button" onclick="generateAttack()">
               <span class="spinner" id="simSpinner"></span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              <span>Generate & Assess Attack</span>
+              <span>Personalize & Assess Attack</span>
             </button>
           </div>
         </div>
@@ -226,7 +226,7 @@
                 </svg>
               </div>
               <h3 class="auth-card-title">Model Telemetry</h3>
-              <p class="auth-card-subtitle">Real-time classification & training metrics</p>
+              <p class="auth-card-subtitle">Real-time classification & benchmark metrics</p>
             </div>
 
             <div class="telemetry-grid">
@@ -235,23 +235,23 @@
                 <div class="telemetry-lbl">Test Accuracy</div>
               </div>
               <div class="telemetry-item">
-                <div class="telemetry-val">&lt; 200ms</div>
-                <div class="telemetry-lbl">Inference Latency (warm instance)*</div>
+                <div class="telemetry-val">&lt; 200 ms</div>
+                <div class="telemetry-lbl">&lt;200 ms classifier inference benchmark</div>
               </div>
               <div class="telemetry-item">
                 <div class="telemetry-val">17,537</div>
-                <div class="telemetry-lbl">Labeled Samples</div>
+                <div class="telemetry-lbl">Cleaned Email Samples</div>
               </div>
               <div class="telemetry-item">
-                <div class="telemetry-val">5,594</div>
-                <div class="telemetry-lbl">Tuning Prompts</div>
+                <div class="telemetry-val">5,000</div>
+                <div class="telemetry-lbl">TF-IDF Features</div>
               </div>
             </div>
 
             <div style="background: rgba(186, 214, 247, 0.03); border: 1px solid rgba(186, 215, 247, 0.1); border-radius: 8px; padding: 10px 12px; margin-top: 4px;">
               <div style="font-size: 11.5px; color: var(--body-muted);">Pipeline Architecture</div>
               <div style="font-size: 12.5px; font-weight: 500; color: #bad6f7; margin-top: 2px;">
-                TF-IDF + Logistic Regression
+                TF-IDF (5,000 features) + Logistic Regression
               </div>
             </div>
 
@@ -303,7 +303,7 @@
             </div>
 
             <div class="confidence-gauge">
-              <span style="font-size: 12px; color: var(--body-muted);">Confidence:</span>
+              <span style="font-size: 12px; color: var(--body-muted);">Classifier Confidence:</span>
               <div class="confidence-bar-wrap">
                 <div id="confidenceBar" class="confidence-bar-fill" style="width: 0%;"></div>
               </div>
@@ -316,21 +316,22 @@
             <!-- Email Client Viewport -->
             <div class="email-viewport">
               <div class="email-meta-header">
+                <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #bad6f7; text-transform: uppercase; margin-bottom: 6px;">SIMULATED ATTACK CONTEXT</div>
                 <div class="email-meta-row">
-                  <span class="meta-label">From:</span>
-                  <span class="meta-val" id="metaSender">--</span>
+                  <span class="meta-label">Scenario:</span>
+                  <span class="meta-val" id="simScenarioVal">--</span>
                 </div>
                 <div class="email-meta-row">
-                  <span class="meta-label">To:</span>
-                  <span class="meta-val" id="metaRecipient">--</span>
+                  <span class="meta-label">Target:</span>
+                  <span class="meta-val" id="simTargetVal">--</span>
                 </div>
                 <div class="email-meta-row">
-                  <span class="meta-label">Subject:</span>
-                  <span class="meta-val" id="metaSubject">--</span>
+                  <span class="meta-label">Organization:</span>
+                  <span class="meta-val" id="simOrgVal">--</span>
                 </div>
               </div>
               <div class="email-content-view" id="emailContent">
-                <span style="color: var(--body-muted); font-style: italic;">Click 'Generate & Assess Attack' or 'Classify Raw Email Text' to run simulation and view threat assessment report.</span>
+                <span style="color: var(--body-muted); font-style: italic;">Click 'Personalize & Assess Attack' or 'Classify Raw Email Text' to run simulation and view threat assessment report.</span>
               </div>
             </div>
 
@@ -351,7 +352,7 @@
               <div class="meta-info-card">
                 <div class="meta-info-title">Model Decision Engine</div>
                 <div class="meta-info-value">TF-IDF + Logistic Regression</div>
-                <div class="meta-info-sub">17,537 training vectors (97.75% acc)</div>
+                <div class="meta-info-sub">TF-IDF • 5,000 features (97.75% test acc)</div>
               </div>
 
               <div class="report-actions">
@@ -393,7 +394,7 @@
                 <circle cx="12" cy="7" r="4"/>
               </svg>
             </div>
-            <span class="feature-label">Persona Config</span>
+            <span class="feature-label">Target Config</span>
           </div>
           <div class="feature-separator pulse"></div>
         </div>
@@ -402,10 +403,27 @@
           <div class="feature-icon-container">
             <div class="feature-icon-bubble">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
               </svg>
             </div>
-            <span class="feature-label">GPT-2 Generator</span>
+            <span class="feature-label">Template Select</span>
+          </div>
+          <div class="feature-separator"></div>
+        </div>
+
+        <div class="feature-slider-item">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="8.5" cy="7" r="4"/>
+                <polyline points="17 11 19 13 23 9"/>
+              </svg>
+            </div>
+            <span class="feature-label">Personalization</span>
           </div>
           <div class="feature-separator"></div>
         </div>
@@ -419,7 +437,7 @@
                 <line x1="12" y1="17" x2="12" y2="21"/>
               </svg>
             </div>
-            <span class="feature-label">TF-IDF 17.5k</span>
+            <span class="feature-label">TF-IDF Features</span>
           </div>
           <div class="feature-separator"></div>
         </div>
@@ -444,14 +462,14 @@
                 <polyline points="22 4 12 14.01 9 11.01"/>
               </svg>
             </div>
-            <span class="feature-label">Threat Score</span>
+            <span class="feature-label">Threat Assess</span>
           </div>
         </div>
 
       </div>
 
       <div class="stepper-desc-box" id="timelineDesc">
-        <strong>1. Persona & Scenario Config</strong> — Attacker parameters configured dynamically: attacker impersonates trusted departmental entities and tailors target role context.
+        <strong>1. Scenario & Target Configuration</strong> — Target role, organization, and scenario parameters defined (Password Reset, Wire Transfer, Cloud SSO, HR Benefits).
       </div>
     </section>
 
@@ -468,10 +486,11 @@
           </div>
         </div>
         <h2 class="section-title text-gradient">
-          Dual-System Architecture.<br/>Extensible by Design.
+          System Architecture.<br/>Offline Training & Runtime Defense.
         </h2>
         <p class="section-desc">
-          Connecting generative attack modeling with statistical defensive filters to uncover email security vulnerabilities before adversaries exploit them.
+          <strong>OFFLINE:</strong> Phishing dataset (17,537 labeled samples) &rarr; GPT-2 fine-tuning &rarr; pre-generated attack library.<br/>
+          <strong>RUNTIME:</strong> Scenario + Role + Company &rarr; attack selection &rarr; personalization &rarr; TF-IDF (5,000 features) &rarr; Logistic Regression &rarr; prediction + confidence.
         </p>
       </div>
 
@@ -499,18 +518,18 @@
             </svg>
           </div>
           <div class="node-title">Target Parameters</div>
-          <div class="node-sub">Role, Company & Scenario Context</div>
+          <div class="node-sub">Scenario, Role & Company Context</div>
         </div>
 
-        <!-- Node 2: Generator Model -->
+        <!-- Node 2: Attack Library -->
         <div class="diagram-node node-generator">
           <div class="node-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
             </svg>
           </div>
-          <div class="node-title">Attack Generator (Sys 1)</div>
-          <div class="node-sub">Fine-tuned on 5,594 Phishing Prompts</div>
+          <div class="node-title">Attack Template Library</div>
+          <div class="node-sub">Pre-Generated via Fine-Tuned GPT-2</div>
         </div>
 
         <!-- Node 3: Center Core Engine -->
@@ -522,8 +541,8 @@
               <path d="M9 12l2 2 4-4"/>
             </svg>
           </div>
-          <div class="node-title" style="font-size: 17px;">Classifier Core (Sys 2)</div>
-          <div class="node-sub">Logistic Regression • 97.75% Acc</div>
+          <div class="node-title" style="font-size: 17px;">Classifier Core</div>
+          <div class="node-sub">Logistic Regression • 97.75% Test Acc</div>
         </div>
 
         <!-- Node 4: Dataset Vectors -->
@@ -535,8 +554,8 @@
               <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
             </svg>
           </div>
-          <div class="node-title">17,537 Vectors</div>
-          <div class="node-sub">TF-IDF Sub-Word Extraction</div>
+          <div class="node-title">TF-IDF • 5,000 Features</div>
+          <div class="node-sub">17,537 Cleaned Email Samples</div>
         </div>
 
         <!-- Node 5: Threat Output -->
@@ -546,8 +565,8 @@
               <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
             </svg>
           </div>
-          <div class="node-title">Threat Telemetry</div>
-          <div class="node-sub">&lt; 200ms Warm Scoring</div>
+          <div class="node-title">Threat Assessment</div>
+          <div class="node-sub">&lt;200 ms Classifier Inference Benchmark</div>
         </div>
       </div>
     </section>
@@ -559,22 +578,22 @@
       <div class="stats-container">
         <div class="stat-item">
           <div class="stat-number">17,537<span class="accent">+</span></div>
-          <div class="stat-label">Verified Email Samples</div>
+          <div class="stat-label">Cleaned Email Samples</div>
         </div>
         <div class="stat-item">
           <div class="stat-number">97.75<span class="accent">%</span></div>
-          <div class="stat-label">Model Classifier Accuracy</div>
+          <div class="stat-label">Classifier Test Accuracy</div>
         </div>
         <div class="stat-item">
           <div class="stat-number">&lt; 200<span class="accent">ms</span></div>
-          <div class="stat-label">Inference Speed (warm instance)*</div>
+          <div class="stat-label">&lt;200 ms classifier inference benchmark</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number">5,594<span class="accent"></span></div>
-          <div class="stat-label">Fine-Tuning Attack Prompts</div>
+          <div class="stat-number">5,000<span class="accent"></span></div>
+          <div class="stat-label">TF-IDF Features</div>
         </div>
       </div>
-      <p style="text-align: center; font-size: 12px; color: var(--body-muted); margin-top: 14px;">* First request after an idle period may take 20–50s due to free-tier cloud cold start.</p>
+      <p style="text-align: center; font-size: 12px; color: var(--body-muted); margin-top: 14px;">* Benchmark measured on local CPU inference for TF-IDF extraction and Logistic Regression classification; excludes network transfer and free-tier cloud instance cold start.</p>
     </section>
 
     <!-- ======================================================================
@@ -584,14 +603,14 @@
       <div class="section-header" style="margin-bottom: 20px;">
         <div class="between-lines-wrapper">
           <div class="badge-pill">
-            <span class="text-gradient">Verification Capabilities</span>
+            <span class="text-gradient">Defensive Capabilities</span>
           </div>
         </div>
         <h2 class="section-title text-gradient">
           Simulated Defense Mechanics
         </h2>
         <p class="section-desc">
-          Automated analysis simulating enterprise mail gateway heuristics and behavioral detection patterns.
+          Automated text analysis using TF-IDF n-gram feature extraction and logistic regression classification.
         </p>
       </div>
 
@@ -601,7 +620,7 @@
           <div class="security-anim-area">
             <div class="radar-box">
               <div class="radar-sweep-line"></div>
-              <span>SCANNING_VECTOR</span>
+              <span>TF_IDF_5000</span>
               <div class="radar-check-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                   <polyline points="20 6 9 17 4 12"/>
@@ -609,7 +628,7 @@
               </div>
             </div>
           </div>
-          <div class="security-card-label">Sub-word N-gram Lexical Tokenizer</div>
+          <div class="security-card-label">Sub-word N-gram Lexical Tokenizer (5,000 Features)</div>
         </div>
 
         <!-- 2. Bot Radar -->
@@ -624,7 +643,7 @@
               </svg>
             </div>
           </div>
-          <div class="security-card-label">Spoofed Sender Identity Analysis</div>
+          <div class="security-card-label">Lexical Pattern Analysis</div>
         </div>
 
         <!-- 3. Threat Calibration Bars -->
@@ -640,7 +659,7 @@
               </div>
             </div>
           </div>
-          <div class="security-card-label">Probabilistic Logistic Calibration</div>
+          <div class="security-card-label">Probability-Based Threat Scoring</div>
         </div>
       </div>
     </section>
@@ -680,14 +699,14 @@
 import requests
 
 response = requests.post("https://social-engineering-simulator-opt1.onrender.com/generate_attack", json={
-    "scenario": "password reset",
+    "scenario": "Password Reset",
     "target_role": "Finance Manager",
     "company": "Acme Corp"
 })
 
 result = response.json()
 print("Threat Level:", result["threat_level"])
-print("Confidence:", result["confidence"], "%")
+print("Classifier Confidence:", result["confidence"], "%")
 print("Generated Payload:\n", result["generated_email"])</pre>
       </div>
     </section>
@@ -766,6 +785,6 @@ print("Generated Payload:\n", result["generated_email"])</pre>
   </div>
 
   <!-- Client-Side JavaScript -->
-  <script src="/static/js/main.js?v=3.0"></script>
+  <script src="/static/js/main.js?v=3.1"></script>
 </body>
 </html>
