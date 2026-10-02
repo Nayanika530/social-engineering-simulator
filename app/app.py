@@ -21,11 +21,19 @@ def home():
     return render_template("index.html")
 @app.route("/generate_attack", methods=["POST"])
 def generate_attack():
-    data = request.json
-    scenario = data.get("scenario", "")
-    target_role = data.get("target_role", "")
-    company = data.get("company", "")
-    sample = random.choice(samples)
+    data = request.json or {}
+    scenario = data.get("scenario", "").strip()
+    target_role = data.get("target_role", "").strip()
+    company = data.get("company", "").strip()
+
+    # Filter samples by scenario (case-insensitive)
+    matched_samples = [s for s in samples if s.get("scenario", "").lower() == scenario.lower()]
+    if matched_samples:
+        sample = random.choice(matched_samples)
+    else:
+        print(f"Warning: No samples found matching scenario '{scenario}'. Falling back to all samples.")
+        sample = random.choice(samples)
+
     generated_email = sample["email"]
     if target_role:
         generated_email = generated_email.replace(sample["role"], target_role)
@@ -42,8 +50,8 @@ def generate_attack():
         "confidence": round(confidence_score, 2)
     })
 
-@app.route("/classify_text", methods=["POST"])
-def classify_text():
+@app.route("/classify_email", methods=["POST"])
+def classify_email():
     data = request.json or {}
     email_text = data.get("email_text", "").strip()
     if not email_text:
@@ -54,10 +62,13 @@ def classify_text():
     threat_level = "Phishing" if prediction == 1 else "Safe"
     confidence_score = float(max(confidence)) * 100
     return jsonify({
-        "generated_email": email_text,
         "threat_level": threat_level,
         "confidence": round(confidence_score, 2)
     })
+
+@app.route("/classify_text", methods=["POST"])
+def classify_text():
+    return classify_email()
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

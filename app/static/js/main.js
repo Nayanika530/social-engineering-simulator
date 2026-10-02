@@ -171,7 +171,7 @@ const timelineData = [
   },
   {
     title: "5. Real-Time Threat Score",
-    desc: "Produces calibrated threat probability (<200ms latency), categorizing the email as High-Risk Phishing or Legitimate Communication with confidence rating."
+    desc: "Produces calibrated threat probability (<200ms latency on warm instance), categorizing the email as High-Risk Phishing or Legitimate Communication with confidence rating."
   }
 ];
 
@@ -194,11 +194,11 @@ function initFeatureTimeline() {
    5. CODE INTEGRATION TABS
    ========================================================================== */
 const codeSnippets = {
-  python: `import requests
+  python: `# Note: Free-tier instance may take 20-50 seconds to respond on the first request after being idle (cold start).
+import requests
 
-# Simulate social engineering attack payload
-response = requests.post("http://localhost:5000/generate_attack", json={
-    "scenario": "IT password reset",
+response = requests.post("https://social-engineering-simulator-opt1.onrender.com/generate_attack", json={
+    "scenario": "password reset",
     "target_role": "Finance Manager",
     "company": "Acme Corp"
 })
@@ -208,20 +208,21 @@ print("Threat Level:", result["threat_level"])
 print("Confidence:", result["confidence"], "%")
 print("Generated Payload:\\n", result["generated_email"])`,
 
-  curl: `curl -X POST https://social-engineering-simulator-opt1.onrender.com/generate_attack \\
+  curl: `# Note: Free-tier instance may take 20-50s to respond on the first request after being idle (cold start).
+curl -X POST https://social-engineering-simulator-opt1.onrender.com/generate_attack \\
   -H "Content-Type: application/json" \\
   -d '{
-    "scenario": "Urgent Wire Transfer",
+    "scenario": "urgent wire transfer",
     "target_role": "Finance Director",
     "company": "Global Retail Inc"
   }'`,
 
-  javascript: `// Test live classification in browser or Node.js
-const res = await fetch('/generate_attack', {
+  javascript: `// Note: Free-tier instance may take 20-50s to respond on the first request after being idle (cold start).
+const res = await fetch('https://social-engineering-simulator-opt1.onrender.com/generate_attack', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    scenario: 'Cloud SSO Access Revocation',
+    scenario: 'account verification',
     target_role: 'DevOps Lead',
     company: 'FinTech Dynamics'
   })
@@ -287,7 +288,6 @@ function applyPreset(scenario, role, company) {
   if (companyInput) companyInput.value = company;
 
   // Ensure center card is active
-  const centerCard = document.querySelector('.card-center');
   const simCard = document.getElementById('simCard');
   if (simCard && !simCard.classList.contains('card-center')) {
     simCard.click();
@@ -298,14 +298,42 @@ function applyPreset(scenario, role, company) {
 
 // Generate Attack API Call
 async function generateAttack() {
-  const scenario = document.getElementById("scenario").value.trim() || "IT password reset";
-  const target_role = document.getElementById("target_role").value.trim() || "Finance Manager";
-  const company = document.getElementById("company").value.trim() || "Acme Corp";
+  const scenario = (document.getElementById("scenario")?.value || "password reset").trim();
+  const target_role = (document.getElementById("target_role")?.value || "Finance Manager").trim();
+  const company = (document.getElementById("company")?.value || "Acme Corp").trim();
 
   const btn = document.getElementById("btnGenerate");
   const spinner = document.getElementById("simSpinner");
   if (btn) btn.disabled = true;
   if (spinner) spinner.style.display = "inline-block";
+
+  // Show loading/empty state in result card before response
+  const resultSection = document.getElementById("resultSection");
+  const statusBadge = document.getElementById("statusBadge");
+  const threatStatusText = document.getElementById("threatStatusText");
+  const confidenceBar = document.getElementById("confidenceBar");
+  const confidenceVal = document.getElementById("confidenceVal");
+  const emailContent = document.getElementById("emailContent");
+  const metaRecipient = document.getElementById("metaRecipient");
+  const metaSubject = document.getElementById("metaSubject");
+  const vectorName = document.getElementById("vectorName");
+  const profileRole = document.getElementById("profileRole");
+  const profileCompany = document.getElementById("profileCompany");
+
+  if (resultSection) {
+    resultSection.style.display = "block";
+    if (statusBadge) statusBadge.className = "report-status-badge";
+    if (threatStatusText) threatStatusText.textContent = "Simulating Attack & Evaluating...";
+    if (confidenceBar) confidenceBar.style.width = "0%";
+    if (confidenceVal) confidenceVal.textContent = "...";
+    if (emailContent) emailContent.innerHTML = '<span style="color: var(--body-muted); font-style: italic;">Generating attack payload with fine-tuned GPT-2 and evaluating TF-IDF probability...</span>';
+    if (metaRecipient) metaRecipient.textContent = `${target_role} <${target_role.toLowerCase().replace(/[^a-z0-9]/g, '.')}@${company.toLowerCase().replace(/[^a-z0-9]/g, '')}.com>`;
+    if (metaSubject) metaSubject.textContent = `Urgent Notice: ${scenario} - ${company}`;
+    if (vectorName) vectorName.textContent = scenario;
+    if (profileRole) profileRole.textContent = target_role;
+    if (profileCompany) profileCompany.textContent = company;
+    resultSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
 
   try {
     const response = await fetch("/generate_attack", {
@@ -322,15 +350,18 @@ async function generateAttack() {
     renderResults(data, scenario, target_role, company);
   } catch (err) {
     alert("Error simulating attack: " + err.message + "\nIf backend is starting up, please allow a moment.");
+    if (threatStatusText) threatStatusText.textContent = "Simulation Failed";
+    if (emailContent) emailContent.textContent = "Error: " + err.message;
   } finally {
     if (btn) btn.disabled = false;
     if (spinner) spinner.style.display = "none";
   }
 }
 
-// Classify Custom Text API Call
+// Classify Raw Text API Call (/classify_email)
 async function classifyCustomText() {
-  const emailText = document.getElementById("customEmailText").value.trim();
+  const emailInput = document.getElementById("customEmailText");
+  const emailText = emailInput ? emailInput.value.trim() : "";
   if (!emailText) {
     alert("Please paste email text to classify.");
     return;
@@ -342,7 +373,7 @@ async function classifyCustomText() {
   if (spinner) spinner.style.display = "inline-block";
 
   try {
-    const response = await fetch("/classify_text", {
+    const response = await fetch("/classify_email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email_text: emailText })
@@ -353,7 +384,32 @@ async function classifyCustomText() {
     }
 
     const data = await response.json();
-    renderResults(data, "Raw Custom Payload Analysis", "Direct Recipient", "Enterprise Gateway");
+
+    // 1. Display real result directly inside the "Direct Vector Scanner" card
+    const directResult = document.getElementById("directScannerResult");
+    const directBadge = document.getElementById("directThreatBadge");
+    const directConf = document.getElementById("directConfidenceVal");
+
+    if (directResult && directBadge && directConf) {
+      directResult.style.display = "block";
+      const isPhishing = data.threat_level === "Phishing";
+      if (isPhishing) {
+        directBadge.className = "report-status-badge badge-phishing";
+        directBadge.innerHTML = '<span class="dot"></span><span>Phishing Threat</span>';
+      } else {
+        directBadge.className = "report-status-badge badge-safe";
+        directBadge.innerHTML = '<span class="dot"></span><span>Safe / Legitimate</span>';
+      }
+      directConf.textContent = data.confidence + "%";
+    }
+
+    // 2. Also populate the full threat assessment result card
+    renderResults({
+      generated_email: emailText,
+      threat_level: data.threat_level,
+      confidence: data.confidence
+    }, "Raw Email Direct Scan", "Direct Target", "Enterprise Gateway");
+
   } catch (err) {
     alert("Error classifying email: " + err.message);
   } finally {
@@ -362,7 +418,7 @@ async function classifyCustomText() {
   }
 }
 
-// Render Results Modal / Card
+// Render Results Modal / Card with real data
 function renderResults(data, scenario, target_role, company) {
   const resultSection = document.getElementById("resultSection");
   const statusBadge = document.getElementById("statusBadge");
@@ -370,6 +426,7 @@ function renderResults(data, scenario, target_role, company) {
   const confidenceBar = document.getElementById("confidenceBar");
   const confidenceVal = document.getElementById("confidenceVal");
   const emailContent = document.getElementById("emailContent");
+  const metaSender = document.getElementById("metaSender");
   const metaRecipient = document.getElementById("metaRecipient");
   const metaSubject = document.getElementById("metaSubject");
   const vectorName = document.getElementById("vectorName");
@@ -378,43 +435,78 @@ function renderResults(data, scenario, target_role, company) {
 
   const isPhishing = data.threat_level === "Phishing";
 
-  if (isPhishing) {
-    statusBadge.className = "report-status-badge badge-phishing";
-    threatStatusText.textContent = "High-Risk Spearphishing Threat";
-    confidenceBar.style.backgroundColor = "#ef4444";
-  } else {
-    statusBadge.className = "report-status-badge badge-safe";
-    threatStatusText.textContent = "Legitimate / Safe Communication";
-    confidenceBar.style.backgroundColor = "#10b981";
+  if (statusBadge && threatStatusText) {
+    if (isPhishing) {
+      statusBadge.className = "report-status-badge badge-phishing";
+      threatStatusText.textContent = "High-Risk Spearphishing Threat";
+      if (confidenceBar) confidenceBar.style.backgroundColor = "#ef4444";
+    } else {
+      statusBadge.className = "report-status-badge badge-safe";
+      threatStatusText.textContent = "Legitimate / Safe Communication";
+      if (confidenceBar) confidenceBar.style.backgroundColor = "#10b981";
+    }
   }
 
-  const conf = data.confidence || 95.0;
-  confidenceBar.style.width = conf + "%";
-  confidenceVal.textContent = conf + "%";
+  const conf = data.confidence || 0.0;
+  if (confidenceBar) confidenceBar.style.width = conf + "%";
+  if (confidenceVal) confidenceVal.textContent = conf + "%";
 
-  metaRecipient.textContent = `${target_role} <${target_role.toLowerCase().replace(/\s+/g, '.')}@${company.toLowerCase().replace(/\s+/g, '')}.com>`;
-  metaSubject.textContent = `Urgent Notice: ${scenario} - ${company}`;
-  emailContent.textContent = data.generated_email;
+  const cleanCompany = (company || "Acme Corp").toLowerCase().replace(/[^a-z0-9]/g, '');
+  const cleanRole = (target_role || "User").toLowerCase().replace(/[^a-z0-9]/g, '.');
 
-  vectorName.textContent = scenario;
-  profileRole.textContent = target_role;
-  profileCompany.textContent = company;
+  if (metaSender) metaSender.textContent = `Security Gateway <alerts@${cleanCompany}-security.org>`;
+  if (metaRecipient) metaRecipient.textContent = `${target_role} <${cleanRole}@${cleanCompany}.com>`;
+  if (metaSubject) metaSubject.textContent = `Urgent Notice: ${scenario} - ${company}`;
+  if (emailContent) emailContent.textContent = data.generated_email || "";
 
-  resultSection.style.display = "block";
-  resultSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  if (vectorName) vectorName.textContent = scenario;
+  if (profileRole) profileRole.textContent = target_role;
+  if (profileCompany) profileCompany.textContent = company;
+
+  if (resultSection) {
+    resultSection.style.display = "block";
+    resultSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
 }
 
-// Copy Email Content
+// Copy Email Content to clipboard
 function copyEmailContent() {
-  const text = document.getElementById("emailContent").textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    const btnText = document.getElementById("copyBtnText");
+  const emailElem = document.getElementById("emailContent");
+  if (!emailElem) return;
+  const text = emailElem.innerText || emailElem.textContent;
+  if (!text || text.includes("Generating attack payload")) return;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showCopiedFeedback();
+    }).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand("copy");
+  document.body.removeChild(ta);
+  showCopiedFeedback();
+}
+
+function showCopiedFeedback() {
+  const btnText = document.getElementById("copyBtnText");
+  if (btnText) {
     btnText.textContent = "Copied!";
-    setTimeout(() => { btnText.textContent = "Copy Email"; }, 2000);
-  });
+    setTimeout(() => { btnText.textContent = "Copy Email Body"; }, 2000);
+  }
 }
 
 // Dismiss Results
 function dismissResult() {
-  document.getElementById("resultSection").style.display = "none";
+  const resultSection = document.getElementById("resultSection");
+  if (resultSection) {
+    resultSection.style.display = "none";
+  }
 }

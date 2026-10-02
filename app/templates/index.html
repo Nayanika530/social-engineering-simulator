@@ -102,7 +102,7 @@
         </div>
 
         <h1 class="hero-headline text-gradient">
-          The world’s best social engineering simulator,<br/>powered by fine-tuned LLMs + ML.
+          A dual-system AI platform simulating phishing attacks and real-time threat detection.
         </h1>
 
         <p class="hero-subheadline">
@@ -136,10 +136,19 @@
               <textarea id="customEmailText" class="form-textarea" placeholder="Paste incoming email headers or message body here to evaluate threat probability..."></textarea>
             </div>
 
-            <button id="btnClassify" class="btn-outline" onclick="classifyCustomText()">
+            <button id="btnClassify" class="btn-outline" type="button" onclick="classifyCustomText()">
               <span class="spinner" id="classifySpinner"></span>
               <span>Classify Raw Email Text</span>
             </button>
+
+            <!-- Direct Result Container inside Card -->
+            <div id="directScannerResult" class="direct-result-box" style="display: none;">
+              <div class="direct-result-header">
+                <span id="directThreatBadge" class="report-status-badge"></span>
+                <span id="directConfidenceVal" class="direct-conf-val"></span>
+              </div>
+              <p class="direct-result-note">Evaluated directly against 17,537 TF-IDF vector weights</p>
+            </div>
 
             <p style="font-size: 11.5px; color: var(--body-muted); text-align: center; margin-top: 4px;">
               Click this card to focus into center stage
@@ -163,7 +172,7 @@
             <!-- Inputs -->
             <div class="form-group">
               <label class="form-label" for="scenario">Attack Scenario</label>
-              <input type="text" id="scenario" class="form-input" placeholder="e.g. IT password reset" value="IT password reset" autocomplete="off" />
+              <input type="text" id="scenario" class="form-input" placeholder="e.g. password reset" value="password reset" autocomplete="off" />
             </div>
 
             <div class="form-group">
@@ -176,26 +185,29 @@
               <input type="text" id="company" class="form-input" placeholder="e.g. Acme Corp" value="Acme Corp" autocomplete="off" />
             </div>
 
-            <!-- Quick Presets -->
+            <!-- Quick Presets matching data/pregenerated_emails.json exactly -->
             <div class="presets-wrap">
               <span class="presets-label">Quick Attack Presets:</span>
               <div class="preset-pills">
-                <button class="preset-pill" onclick="applyPreset('IT Mandatory Password Reset', 'Security Analyst', 'Apex Financial')">
+                <button class="preset-pill" type="button" onclick="applyPreset('password reset', 'Security Analyst', 'Apex Financial')">
                   🔐 Password Reset
                 </button>
-                <button class="preset-pill" onclick="applyPreset('Urgent Wire Transfer Authorization', 'Finance Director', 'Global Retail Inc')">
-                  💸 Wire Transfer (BEC)
+                <button class="preset-pill" type="button" onclick="applyPreset('urgent wire transfer', 'Finance Director', 'Global Retail Inc')">
+                  💸 Wire Transfer
                 </button>
-                <button class="preset-pill" onclick="applyPreset('Cloud SSO Access Revocation Warning', 'DevOps Lead', 'FinTech Dynamics')">
-                  ☁️ Cloud SSO
+                <button class="preset-pill" type="button" onclick="applyPreset('software license renewal', 'DevOps Lead', 'CloudScale Technologies')">
+                  📋 Software License
                 </button>
-                <button class="preset-pill" onclick="applyPreset('Annual HR Benefits Enrollment', 'Senior Engineer', 'CloudScale')">
-                  📋 HR Benefits
+                <button class="preset-pill" type="button" onclick="applyPreset('account verification', 'Senior Engineer', 'FinTech Dynamics')">
+                  ✅ Account Verification
+                </button>
+                <button class="preset-pill" type="button" onclick="applyPreset('invoice payment', 'Accounts Payable', 'Nexus Manufacturing')">
+                  💰 Invoice Payment
                 </button>
               </div>
             </div>
 
-            <button id="btnGenerate" class="btn-primary" onclick="generateAttack()">
+            <button id="btnGenerate" class="btn-primary" type="button" onclick="generateAttack()">
               <span class="spinner" id="simSpinner"></span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               <span>Generate & Assess Attack</span>
@@ -224,7 +236,7 @@
               </div>
               <div class="telemetry-item">
                 <div class="telemetry-val">&lt; 200ms</div>
-                <div class="telemetry-lbl">Inference Latency</div>
+                <div class="telemetry-lbl">Inference Latency (warm instance)*</div>
               </div>
               <div class="telemetry-item">
                 <div class="telemetry-val">17,537</div>
@@ -243,7 +255,7 @@
               </div>
             </div>
 
-            <button class="btn-outline" onclick="document.getElementById('architecture').scrollIntoView({ behavior: 'smooth' })">
+            <button class="btn-outline" type="button" onclick="document.getElementById('architecture').scrollIntoView({ behavior: 'smooth' })">
               <span>View Architecture Board</span>
             </button>
 
@@ -283,9 +295,9 @@
           
           <div class="report-header">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <div id="statusBadge" class="report-status-badge badge-phishing">
+              <div id="statusBadge" class="report-status-badge">
                 <span class="dot"></span>
-                <span id="threatStatusText">High-Risk Spearphishing Threat</span>
+                <span id="threatStatusText">Awaiting Simulation...</span>
               </div>
               <span style="font-size: 12px; color: var(--body-muted);">Real-Time ML Assessment</span>
             </div>
@@ -293,9 +305,9 @@
             <div class="confidence-gauge">
               <span style="font-size: 12px; color: var(--body-muted);">Confidence:</span>
               <div class="confidence-bar-wrap">
-                <div id="confidenceBar" class="confidence-bar-fill" style="width: 95%;"></div>
+                <div id="confidenceBar" class="confidence-bar-fill" style="width: 0%;"></div>
               </div>
-              <span id="confidenceVal" class="confidence-value">95.0%</span>
+              <span id="confidenceVal" class="confidence-value">--%</span>
             </div>
           </div>
 
@@ -306,19 +318,19 @@
               <div class="email-meta-header">
                 <div class="email-meta-row">
                   <span class="meta-label">From:</span>
-                  <span class="meta-val" id="metaSender">Security Alert &lt;notify@corp-update-notice.com&gt;</span>
+                  <span class="meta-val" id="metaSender">--</span>
                 </div>
                 <div class="email-meta-row">
                   <span class="meta-label">To:</span>
-                  <span class="meta-val" id="metaRecipient">Target Role</span>
+                  <span class="meta-val" id="metaRecipient">--</span>
                 </div>
                 <div class="email-meta-row">
                   <span class="meta-label">Subject:</span>
-                  <span class="meta-val" id="metaSubject">Urgent Notice</span>
+                  <span class="meta-val" id="metaSubject">--</span>
                 </div>
               </div>
               <div class="email-content-view" id="emailContent">
-                <!-- Dynamically populated -->
+                <span style="color: var(--body-muted); font-style: italic;">Click 'Generate & Assess Attack' or 'Classify Raw Email Text' to run simulation and view threat assessment report.</span>
               </div>
             </div>
 
@@ -326,14 +338,14 @@
             <div class="threat-meta-panel">
               <div class="meta-info-card">
                 <div class="meta-info-title">Simulated Attack Vector</div>
-                <div class="meta-info-value" id="vectorName">Social Engineering Spearphishing</div>
-                <div class="meta-info-sub">Personalized target role and organizational spoofing</div>
+                <div class="meta-info-value" id="vectorName">--</div>
+                <div class="meta-info-sub">Personalized target role and organizational context</div>
               </div>
 
               <div class="meta-info-card">
                 <div class="meta-info-title">Target Profile</div>
-                <div class="meta-info-value" id="profileRole">Finance Manager</div>
-                <div class="meta-info-sub" id="profileCompany">Acme Corp</div>
+                <div class="meta-info-value" id="profileRole">--</div>
+                <div class="meta-info-sub" id="profileCompany">--</div>
               </div>
 
               <div class="meta-info-card">
@@ -343,17 +355,17 @@
               </div>
 
               <div class="report-actions">
-                <button class="btn-report-action" onclick="copyEmailContent()">
+                <button class="btn-report-action" type="button" id="copyEmailBtn" onclick="copyEmailContent()">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                   <span id="copyBtnText">Copy Email Body</span>
                 </button>
-                <button class="btn-report-action" onclick="generateAttack()">
+                <button class="btn-report-action" type="button" id="reSimulateBtn" onclick="generateAttack()">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
-                  Re-Simulate Attack
+                  <span>Re-Simulate Attack</span>
                 </button>
-                <button class="btn-report-action" onclick="dismissResult()">
+                <button class="btn-report-action" type="button" id="closeReportBtn" onclick="dismissResult()">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                  Close Report
+                  <span>Close Report</span>
                 </button>
               </div>
             </div>
@@ -535,7 +547,7 @@
             </svg>
           </div>
           <div class="node-title">Threat Telemetry</div>
-          <div class="node-sub">&lt; 200ms Calibrated Scoring</div>
+          <div class="node-sub">&lt; 200ms Warm Scoring</div>
         </div>
       </div>
     </section>
@@ -555,13 +567,14 @@
         </div>
         <div class="stat-item">
           <div class="stat-number">&lt; 200<span class="accent">ms</span></div>
-          <div class="stat-label">Live Threat Assessment Speed</div>
+          <div class="stat-label">Inference Speed (warm instance)*</div>
         </div>
         <div class="stat-item">
           <div class="stat-number">5,594<span class="accent"></span></div>
           <div class="stat-label">Fine-Tuning Attack Prompts</div>
         </div>
       </div>
+      <p style="text-align: center; font-size: 12px; color: var(--body-muted); margin-top: 14px;">* First request after an idle period may take 20–50s due to free-tier cloud cold start.</p>
     </section>
 
     <!-- ======================================================================
@@ -663,11 +676,11 @@
             <span>Copy Code</span>
           </button>
         </div>
-        <pre class="code-pre" id="codeDisplay">import requests
+        <pre class="code-pre" id="codeDisplay"># Note: Free-tier instance may take 20-50 seconds to respond on the first request after being idle (cold start).
+import requests
 
-# Simulate social engineering attack payload
-response = requests.post("http://localhost:5000/generate_attack", json={
-    "scenario": "IT password reset",
+response = requests.post("https://social-engineering-simulator-opt1.onrender.com/generate_attack", json={
+    "scenario": "password reset",
     "target_role": "Finance Manager",
     "company": "Acme Corp"
 })

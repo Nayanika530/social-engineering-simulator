@@ -1901,12 +1901,60 @@ img, svg {
   gap: 12px;
 }
 
+/* Direct Vector Scanner Result Box inside Left Card */
+.direct-result-box {
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(186, 214, 247, 0.04);
+  border: 1px solid rgba(186, 215, 247, 0.15);
+  animation: fadeInModal 0.3s ease;
+}
+
+.direct-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.direct-conf-val {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 13px;
+  color: #bad6f7;
+}
+
+.direct-result-note {
+  font-size: 11px;
+  color: var(--body-muted);
+  margin: 0;
+}
+
 /* ==========================================================================
    LIGHT MODE OVERRIDES
    ========================================================================== */
 body.light-theme {
   --dark-background: #f8fafc;
+  --body-normal: #334155;
+  --body-loud: #0f172a;
+  --body-muted: #64748b;
+  --gradient-loud-100: linear-gradient(180deg, #0f172a 0%, #334155 100%);
+  --blue-3: rgba(15, 23, 42, 0.03);
+  --blue-6: rgba(15, 23, 42, 0.06);
+  --blue-12: rgba(15, 23, 42, 0.12);
+  --blue-24: rgba(15, 23, 42, 0.24);
+  --line-color: rgba(15, 23, 42, 0.12);
   background-color: #f8fafc;
+  color: #0f172a;
+}
+
+body.light-theme .direct-result-box {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+body.light-theme .direct-conf-val {
   color: #0f172a;
 }
 
