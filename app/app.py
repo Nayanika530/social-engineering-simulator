@@ -1,4 +1,6 @@
 import os
+import ipaddress
+import urllib.parse
 from flask import Flask, render_template, request, jsonify
 import joblib
 import json
@@ -148,6 +150,253 @@ def classify_email():
 def classify_text():
     return classify_email()
 
+# ==============================================================================
+# DEFENSIVE FEATURE 1: MESSAGE / SMS PHISHING DETECTION
+# ==============================================================================
+
+@app.route("/classify_message", methods=["POST"])
+def classify_message():
+    """Classifies SMS/WhatsApp-style messages using the pre-loaded email classifier model.
+    Note: The classifier was trained on email data; short SMS text may have different lexical distribution.
+    """
+    if not request.is_json:
+        return jsonify({"error": "message_text is required and must be a non-empty string"}), 400
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict) or "message_text" not in data:
+        return jsonify({"error": "message_text is required and must be a non-empty string"}), 400
+
+    message_text = data.get("message_text")
+    if not isinstance(message_text, str) or not message_text.strip():
+        return jsonify({"error": "message_text is required and must be a non-empty string"}), 400
+
+    # Reuse pre-loaded TF-IDF vectorizer and Logistic Regression classifier
+    message_vec = vectorizer.transform([message_text])
+    prediction = classifier_model.predict(message_vec)[0]
+    confidence = classifier_model.predict_proba(message_vec)[0]
+    threat_level = "Phishing" if prediction == 1 else "Safe"
+    confidence_score = float(max(confidence)) * 100
+
+    return jsonify({
+        "threat_level": threat_level,
+        "confidence": round(confidence_score, 2),
+        "note": "Classifier trained on email data; may be less accurate on short SMS-style text."
+    })
+
+# ==============================================================================
+# DEFENSIVE FEATURE 2: URL / LINK SAFETY CHECKER (RULE-BASED HEURISTICS)
+# ==============================================================================
+
+# Brand to authentic primary domain mapping for brand impersonation heuristic
+KNOWN_BRANDS = {
+    "paypal": "paypal.com",
+    "amazon": "amazon.com",
+    "google": "google.com",
+    "microsoft": "microsoft.com",
+    "apple": "apple.com",
+    "netflix": "netflix.com",
+}
+
+# Known URL shortener services (medium risk flag)
+SHORTENER_DOMAINS = {
+    "bit.ly",
+    "tinyurl.com",
+    "t.co",
+    "goo.gl",
+    "ow.ly",
+    "is.gd",
+}
+
+# Suspicious or commonly abused TLDs (medium risk flag)
+SUSPICIOUS_TLDS = {
+    ".xyz",
+    ".top",
+    ".club",
+    ".work",
+    ".click",
+    ".link",
+    ".zip",
+}
+
+# Severity-based heuristic score weights:
+# HIGH-RISK FLAGS (40 points each):
+#   - IP address instead of domain       : 40 points
+#   - @ symbol in URL authority          : 40 points
+#   - Brand impersonation in hostname    : 40 points
+# MEDIUM-RISK FLAGS (20 points each):
+#   - URL shortening service             : 20 points
+#   - Excessive hyphens in hostname (>=2): 20 points
+#   - Suspicious or commonly abused TLD  : 20 points
+#   - Punycode / IDN encoding (xn--)     : 20 points
+# LOW-RISK FLAGS (10 points each):
+#   - No HTTPS (http:// scheme)          : 10 points
+#   - Unusually long URL (> 75 chars)    : 10 points
+# Maximum score is capped at 100 points.
+
+def analyze_url_heuristics(raw_url: str):
+    """Deterministically evaluates a URL using local phishing heuristics.
+    Never connects, fetches, scrapes, or performs DNS lookups for the target URL.
+    Returns analysis dict or None if the URL is malformed.
+    """
+    url_stripped = raw_url.strip()
+    try:
+        parsed = urllib.parse.urlsplit(url_stripped)
+    except Exception:
+        return None
+
+    scheme = (parsed.scheme or "").lower()
+    if scheme not in ("http", "https"):
+        return None
+
+    if not parsed.netloc:
+        return None
+
+    try:
+        hostname = (parsed.hostname or "").lower()
+        # Validate port if present (raises ValueError on invalid port)
+        _ = parsed.port
+    except ValueError:
+        return None
+
+    if not hostname:
+        return None
+
+    flags_triggered = []
+    high_risk_count = 0
+    medium_risk_count = 0
+    score = 0
+
+    # --------------------------------------------------------------------------
+    # 1. HIGH-RISK FLAGS
+    # --------------------------------------------------------------------------
+
+    # A. IP address instead of domain (Weight: 40)
+    is_ip = False
+    try:
+        ipaddress.ip_address(hostname)
+        is_ip = True
+    except ValueError:
+        is_ip = False
+
+    if is_ip:
+        flags_triggered.append("URL uses an IP address instead of a domain name")
+        score += 40
+        high_risk_count += 1
+
+    # B. @ symbol in authority (Weight: 40)
+    # The @ character before the host can obscure the real destination in RFC 3986 authorities
+    if "@" in parsed.netloc:
+        flags_triggered.append("URL contains an @ symbol that may obscure the actual destination")
+        score += 40
+        high_risk_count += 1
+
+    # C. Brand impersonation (Weight: 40)
+    # Applied strictly to the hostname/domain only; path contents are excluded.
+    # Normalizes common leetspeak substitutions (1->l, 0->o, 5->s, 3->e) to detect typosquatting.
+    leet_trans = str.maketrans({"1": "l", "0": "o", "5": "s", "3": "e"})
+    norm_hostname = hostname.translate(leet_trans)
+
+    brand_impersonated = False
+    for brand, legit_domain in KNOWN_BRANDS.items():
+        is_legit = (hostname == legit_domain or hostname.endswith("." + legit_domain))
+        if not is_legit:
+            if brand in hostname or brand in norm_hostname:
+                brand_impersonated = True
+                break
+
+    if brand_impersonated:
+        flags_triggered.append("Domain appears to impersonate a known brand")
+        score += 40
+        high_risk_count += 1
+
+    # --------------------------------------------------------------------------
+    # 2. MEDIUM-RISK FLAGS
+    # --------------------------------------------------------------------------
+
+    # D. URL shortener service (Weight: 20)
+    is_shortener = (hostname in SHORTENER_DOMAINS or any(hostname.endswith("." + s) for s in SHORTENER_DOMAINS))
+    if is_shortener:
+        flags_triggered.append("URL uses a URL-shortening service")
+        score += 20
+        medium_risk_count += 1
+
+    # E. Excessive hyphens in domain (Weight: 20)
+    # Deterministic threshold: 2 or more hyphens in the hostname indicates suspicious domain chaining
+    if hostname.count("-") >= 2:
+        flags_triggered.append("Domain contains an unusually high number of hyphens")
+        score += 20
+        medium_risk_count += 1
+
+    # F. Suspicious/rare TLD (Weight: 20)
+    if any(hostname.endswith(tld) for tld in SUSPICIOUS_TLDS):
+        flags_triggered.append("URL uses a suspicious or commonly abused TLD")
+        score += 20
+        medium_risk_count += 1
+
+    # G. Punycode / IDN encoding (Weight: 20)
+    labels = hostname.split(".")
+    if any(label.startswith("xn--") for label in labels):
+        flags_triggered.append("Domain uses punycode/IDN encoding and may require additional scrutiny")
+        score += 20
+        medium_risk_count += 1
+
+    # --------------------------------------------------------------------------
+    # 3. LOW-RISK FLAGS
+    # --------------------------------------------------------------------------
+
+    # H. No HTTPS (Weight: 10)
+    if scheme == "http":
+        flags_triggered.append("URL does not use HTTPS")
+        score += 10
+
+    # I. Unusually long URL (Weight: 10)
+    # Threshold: URL exceeding 75 characters
+    if len(url_stripped) > 75:
+        flags_triggered.append("URL is unusually long")
+        score += 10
+
+    # Cap score at 100
+    risk_score = min(score, 100)
+
+    # Risk mapping:
+    # - Any high-risk flag present                          -> High Risk
+    # - No high-risk flags AND 2 or more medium-risk flags  -> Medium Risk
+    # - Otherwise                                           -> Low Risk
+    if high_risk_count > 0:
+        risk_level = "High Risk"
+    elif medium_risk_count >= 2:
+        risk_level = "Medium Risk"
+    else:
+        risk_level = "Low Risk"
+
+    return {
+        "risk_level": risk_level,
+        "risk_score": risk_score,
+        "flags_triggered": flags_triggered,
+        "url_checked": raw_url
+    }
+
+@app.route("/classify_url", methods=["POST"])
+def classify_url():
+    """Deterministically evaluates a URL against phishing heuristics without contacting the server."""
+    if not request.is_json:
+        return jsonify({"error": "url is required and must be a non-empty string"}), 400
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict) or "url" not in data:
+        return jsonify({"error": "url is required and must be a non-empty string"}), 400
+
+    raw_url = data.get("url")
+    if not isinstance(raw_url, str) or not raw_url.strip():
+        return jsonify({"error": "url is required and must be a non-empty string"}), 400
+
+    result = analyze_url_heuristics(raw_url)
+    if result is None:
+        return jsonify({"error": "url is required and must be a non-empty string"}), 400
+
+    return jsonify(result)
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
+

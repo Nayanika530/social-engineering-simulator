@@ -516,3 +516,154 @@ function dismissResult() {
     resultSection.style.display = "none";
   }
 }
+
+/* ==========================================================================
+   DEFENSIVE TOOLS: MESSAGE THREAT SCANNER & LINK SAFETY CHECKER
+   ========================================================================== */
+
+// Classify SMS/WhatsApp Message API Call (/classify_message)
+async function classifyMessageText() {
+  const messageInput = document.getElementById("customMessageText");
+  const messageText = messageInput ? messageInput.value.trim() : "";
+  if (!messageText) {
+    alert("Please paste SMS or message text to classify.");
+    return;
+  }
+
+  const btn = document.getElementById("btnClassifyMessage");
+  const spinner = document.getElementById("messageSpinner");
+  if (btn) btn.disabled = true;
+  if (spinner) spinner.style.display = "inline-block";
+
+  try {
+    const response = await fetch("/classify_message", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message_text: messageText })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Server returned status " + response.status);
+    }
+
+    const resultBox = document.getElementById("messageScannerResult");
+    const badge = document.getElementById("messageThreatBadge");
+    const conf = document.getElementById("messageConfidenceVal");
+    const note = document.getElementById("messageNote");
+
+    if (resultBox && badge && conf && note) {
+      resultBox.style.display = "block";
+      const isPhishing = data.threat_level === "Phishing";
+
+      // Build status badge safely via DOM element methods
+      badge.textContent = "";
+      const dot = document.createElement("span");
+      dot.className = "dot";
+      const badgeText = document.createElement("span");
+
+      if (isPhishing) {
+        badge.className = "report-status-badge badge-phishing";
+        badgeText.textContent = "PHISHING DETECTED";
+      } else {
+        badge.className = "report-status-badge badge-safe";
+        badgeText.textContent = "NO PHISHING SIGNAL DETECTED";
+      }
+      badge.appendChild(dot);
+      badge.appendChild(badgeText);
+
+      conf.textContent = "Classifier confidence: " + data.confidence + "%";
+      note.textContent = data.note || "";
+    }
+  } catch (err) {
+    alert("Error classifying message: " + err.message);
+  } finally {
+    if (btn) btn.disabled = false;
+    if (spinner) spinner.style.display = "none";
+  }
+}
+
+// Check Link Safety API Call (/classify_url)
+async function checkUrlSafety() {
+  const urlInput = document.getElementById("customUrlInput");
+  const rawUrl = urlInput ? urlInput.value.trim() : "";
+  if (!rawUrl) {
+    alert("Please enter a URL to check.");
+    return;
+  }
+
+  const btn = document.getElementById("btnCheckUrl");
+  const spinner = document.getElementById("urlSpinner");
+  if (btn) btn.disabled = true;
+  if (spinner) spinner.style.display = "inline-block";
+
+  try {
+    const response = await fetch("/classify_url", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: rawUrl })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Server returned status " + response.status);
+    }
+
+    const resultBox = document.getElementById("urlScannerResult");
+    const badge = document.getElementById("urlRiskBadge");
+    const scoreVal = document.getElementById("urlRiskScoreVal");
+    const urlChecked = document.getElementById("urlCheckedVal");
+    const flagsHeader = document.getElementById("urlFlagsHeader");
+    const flagsList = document.getElementById("urlFlagsList");
+
+    if (resultBox && badge && scoreVal && urlChecked && flagsList) {
+      resultBox.style.display = "block";
+
+      // Build status badge safely via DOM element methods
+      badge.textContent = "";
+      const dot = document.createElement("span");
+      dot.className = "dot";
+      const badgeText = document.createElement("span");
+
+      if (data.risk_level === "High Risk") {
+        badge.className = "report-status-badge badge-phishing"; // Red
+        badgeText.textContent = "HIGH RISK";
+      } else if (data.risk_level === "Medium Risk") {
+        badge.className = "report-status-badge badge-warning"; // Orange
+        badgeText.textContent = "MEDIUM RISK";
+      } else {
+        badge.className = "report-status-badge badge-safe"; // Green
+        badgeText.textContent = "LOW RISK";
+      }
+      badge.appendChild(dot);
+      badge.appendChild(badgeText);
+
+      scoreVal.textContent = "Risk score: " + data.risk_score;
+
+      // Render submitted URL strictly as inert plain text (never executable, never clickable)
+      urlChecked.textContent = data.url_checked || rawUrl;
+
+      // Populate flagged heuristics list safely using createElement
+      flagsList.textContent = "";
+      const flags = data.flags_triggered || [];
+      if (flags.length === 0) {
+        if (flagsHeader) flagsHeader.textContent = "No heuristic flags detected";
+      } else {
+        if (flagsHeader) flagsHeader.textContent = "Flags detected:";
+        flags.forEach(flagText => {
+          const li = document.createElement("li");
+          li.textContent = flagText;
+          flagsList.appendChild(li);
+        });
+      }
+    }
+  } catch (err) {
+    alert("Error checking URL: " + err.message);
+  } finally {
+    if (btn) btn.disabled = false;
+    if (spinner) spinner.style.display = "none";
+  }
+}
+

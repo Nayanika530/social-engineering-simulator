@@ -35,6 +35,7 @@
       <!-- Navigation Links -->
       <ul class="hero-nav-links">
         <li><a href="#simulator" class="hero-nav-link">Attack Simulator</a></li>
+        <li><a href="#defensiveScanners" class="hero-nav-link">Threat Scanners</a></li>
         <li><a href="#pipeline" class="hero-nav-link">Pipeline Stepper</a></li>
         <li><a href="#architecture" class="hero-nav-link">Architecture</a></li>
         <li><a href="#metrics" class="hero-nav-link">Telemetry</a></li>
@@ -371,6 +372,112 @@
               </div>
             </div>
 
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           5B. DEFENSIVE THREAT SCANNERS (SMS & URL LINK CHECKER)
+           ====================================================================== -->
+      <div class="defensive-scanners-stage" id="defensiveScanners">
+        <div class="section-header" style="margin-bottom: 24px; text-align: center;">
+          <div class="between-lines-wrapper">
+            <div class="badge-pill">
+              <span class="pill-dot"></span>
+              <span class="text-gradient">Defensive Verification Tools</span>
+            </div>
+          </div>
+          <h2 class="section-title text-gradient" style="font-size: 28px; margin: 10px 0 6px;">
+            Message &amp; Link Threat Scanners
+          </h2>
+          <p class="section-desc" style="max-width: 680px; margin: 0 auto; font-size: 14px;">
+            Targeted threat analysis modules for mobile smishing messages and suspicious phishing URL verification.
+          </p>
+        </div>
+
+        <div class="scanners-grid">
+
+          <!-- CARD A: Message Threat Scanner -->
+          <div class="auth-card auth-card-static" id="messageScannerCard" style="--brand-color: #0ea5e9;">
+            <div class="auth-card-content">
+              <div class="auth-card-header">
+                <div class="auth-brand-icon" style="background: rgba(14, 165, 233, 0.15); border: 1px solid rgba(14, 165, 233, 0.35);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                  </svg>
+                </div>
+                <h3 class="auth-card-title">Message Threat Scanner</h3>
+                <p class="auth-card-subtitle">Score SMS/WhatsApp-style messages using TF-IDF + Logistic Regression</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="customMessageText">
+                  <span>Paste SMS or Message Text</span>
+                  <span style="font-family: var(--font-mono); font-size: 10px; color: var(--body-muted);">SMS / Smishing</span>
+                </label>
+                <textarea id="customMessageText" class="form-textarea" placeholder="Paste incoming SMS, WhatsApp, or mobile chat message to evaluate threat probability..." style="height: 100px;"></textarea>
+              </div>
+
+              <button id="btnClassifyMessage" class="btn-outline" type="button" onclick="classifyMessageText()">
+                <span class="spinner" id="messageSpinner"></span>
+                <span>Classify Message</span>
+              </button>
+
+              <!-- Message Result Box -->
+              <div id="messageScannerResult" class="direct-result-box" style="display: none;">
+                <div class="direct-result-header">
+                  <span id="messageThreatBadge" class="report-status-badge"></span>
+                  <span id="messageConfidenceVal" class="direct-conf-val"></span>
+                </div>
+                <p id="messageNote" class="direct-result-note" style="margin-top: 8px; color: var(--body-muted); font-size: 11px; line-height: 1.4;"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD B: Link Safety Checker -->
+          <div class="auth-card auth-card-static" id="urlScannerCard" style="--brand-color: #f59e0b;">
+            <div class="auth-card-content">
+              <div class="auth-card-header">
+                <div class="auth-brand-icon" style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                  </svg>
+                </div>
+                <h3 class="auth-card-title">Link Safety Checker</h3>
+                <p class="auth-card-subtitle">Deterministic rule-based heuristics for suspicious link analysis</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="customUrlInput">
+                  <span>Paste a URL to check</span>
+                  <span style="font-family: var(--font-mono); font-size: 10px; color: var(--body-muted);">Rule-Based</span>
+                </label>
+                <input type="text" id="customUrlInput" class="form-input" placeholder="e.g. http://192.168.1.1/login or https://paypal-verify.com" autocomplete="off" />
+              </div>
+
+              <button id="btnCheckUrl" class="btn-outline" type="button" onclick="checkUrlSafety()">
+                <span class="spinner" id="urlSpinner"></span>
+                <span>Check Link Safety</span>
+              </button>
+
+              <!-- URL Result Box -->
+              <div id="urlScannerResult" class="direct-result-box" style="display: none;">
+                <div class="direct-result-header">
+                  <span id="urlRiskBadge" class="report-status-badge"></span>
+                  <span id="urlRiskScoreVal" class="direct-conf-val"></span>
+                </div>
+                <div style="font-size: 11.5px; color: var(--body-muted); margin-top: 8px; word-break: break-all;">
+                  Checked: <code id="urlCheckedVal" style="font-family: var(--font-mono); color: #bad6f7; background: rgba(186, 214, 247, 0.08); padding: 2px 6px; border-radius: 4px;"></code>
+                </div>
+                <div style="font-size: 11.5px; font-weight: 600; color: var(--body-normal); margin-top: 8px;" id="urlFlagsHeader">Flags detected:</div>
+                <ul id="urlFlagsList" style="margin: 4px 0 0 18px; padding: 0; font-size: 11px; color: var(--body-normal); line-height: 1.5;"></ul>
+                <p class="direct-result-note" style="margin-top: 10px; font-size: 11px; color: var(--body-muted); border-top: 1px solid rgba(186, 215, 247, 0.1); padding-top: 6px;">
+                  Heuristic analysis only. A Low Risk result does not guarantee that the URL is safe.
+                </p>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -750,6 +857,7 @@ print("Generated Payload:\n", result["generated_email"])</pre>
           <h5>Platform</h5>
           <ul class="footer-links">
             <li><a href="#simulator">Attack Simulator</a></li>
+            <li><a href="#defensiveScanners">Threat Scanners</a></li>
             <li><a href="#pipeline">Pipeline Stepper</a></li>
             <li><a href="#architecture">Architecture</a></li>
             <li><a href="#metrics">Classifier Metrics</a></li>
