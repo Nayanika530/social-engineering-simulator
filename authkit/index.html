@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>AuthKit by WorkOS</title>
+  <meta name="description" content="The world's best login box, powered by WorkOS + Radix." />
+  <meta property="og:title" content="AuthKit by WorkOS" />
+  <meta property="og:description" content="A fully-featured UI component system for building authentication flows into your app." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-wrapper">
+
+    <!-- ======================================================================
+         1. HERO SECTION & TOP NAVIGATION
+         ====================================================================== -->
+    <header class="hero-header">
+      <div class="hero-powered-by">
+        <a href="https://workos.com" target="_blank" rel="noopener noreferrer" class="hero-powered-by-link" title="Powered by WorkOS">
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="76" height="15" fill="none">
+            <g fill="currentColor">
+              <path d="M0 .186h2.79L4.8 8.464c.372 1.562.446 2.493.446 2.493h.037s.13-.911.503-2.493L7.7.186h3.163l2.027 8.278c.39 1.618.484 2.493.484 2.493h.056s.038-.875.409-2.493L15.775.186h2.79L15.03 13.765h-3.107L9.785 5.543c-.446-1.786-.484-2.585-.484-2.585h-.037s-.038.799-.447 2.585l-2.009 8.222H3.61L0 .185ZM18.1 8.832c0-3.107 2.008-5.116 5.041-5.116 3.014 0 5.023 2.009 5.023 5.116 0 3.124-2.01 5.153-5.023 5.153-3.031-.002-5.042-2.028-5.042-5.153Zm7.459 0c0-2.01-.967-3.145-2.418-3.145-1.562 0-2.437 1.266-2.437 3.145 0 2.046.967 3.18 2.437 3.18 1.563 0 2.418-1.265 2.418-3.18ZM29.41 3.868h2.473v1.824h.056c.428-.949 1.45-1.898 3.199-1.898.297 0 .484.038.614.074v2.474h-.074s-.223-.074-.837-.074c-1.916 0-2.958 1.134-2.958 3.254v4.241h-2.474V3.868ZM36.906.186h2.473v4.352c0 2.567-.038 3.032-.038 3.032h.038l3.683-3.701h3.088l-4.314 4.278 5.004 5.618H43.92l-3.61-4.093-.93.91v3.181h-2.473V.187ZM46.876 7.025c0-4.185 2.605-6.975 6.511-6.975 3.907 0 6.511 2.79 6.511 6.975S57.293 14 53.388 14c-3.907 0-6.512-2.79-6.512-6.975Zm10.324 0c0-2.846-1.525-4.763-3.814-4.763-2.29 0-3.813 1.917-3.813 4.763s1.525 4.762 3.813 4.762c2.288 0 3.814-1.916 3.814-4.762ZM60.845 9.245h2.828c0 1.6 1.098 2.493 2.772 2.493 1.414 0 2.382-.707 2.382-1.712 0-1.134-.744-1.433-3.107-1.897-2.158-.428-4.446-1.154-4.446-3.982C61.274 1.786 63.283 0 66.352 0c3.199 0 5.172 1.674 5.172 4.203h-2.828c0-1.227-.949-1.99-2.344-1.99-1.413 0-2.288.687-2.288 1.692 0 1.06.614 1.469 2.511 1.86 2.808.595 5.116.91 5.116 4.035 0 2.476-2.158 4.15-5.34 4.15-3.236 0-5.506-1.879-5.506-4.705Z" />
+            </g>
+          </svg>
+        </a>
+      </div>
+
+      <!-- AuthKit Central Interlocking Hex Emblem -->
+      <a href="/" class="hero-workos-icon" title="AuthKit">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" viewBox="0 0 55.4 48">
+          <g fill="rgba(186, 214, 247, 0.6)">
+            <path d="M0 24c0 1.1.3 2.1.8 3l9.7 16.8c1 1.7 2.5 3.1 4.4 3.7 3.6 1.2 7.5-.3 9.4-3.5l2.3-4.1-9.2-16L27.2 7l2.3-4c.7-1.2 1.6-2.2 2.7-3h-15c-2.6 0-5.1 1.4-6.4 3.7L.8 21c-.5.9-.8 1.9-.8 3z"/>
+            <path d="M55.4 24c0-1.1-.3-2.1-.8-3L44.8 4C42.9.7 39-.7 35.4.5c-1.9.6-3.4 2-4.4 3.7L28.7 8 38 24l-9.8 16.9-2.3 4.1c-.7 1.2-1.6 2.2-2.7 3h15.1c2.6 0 5.1-1.4 6.4-3.7l10-17.3c.4-.9.7-1.9.7-3z"/>
+          </g>
+        </svg>
+      </a>
+
+      <!-- Right Navigation Actions -->
+      <div class="hero-nav-right">
+        <a class="glowing-btn" href="https://github.com/workos/authkit" target="_blank" rel="noopener noreferrer" style="width: 38px; padding: 0;">
+          <span class="glowing-btn-text">
+            <svg width="20" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M10.4756 2C5.97315 2 2.33331 5.66667 2.33331 10.2028C2.33331 13.8288 4.66548 16.8982 7.90081 17.9845C8.30531 18.0662 8.45348 17.808 8.45348 17.5908C8.45348 17.4007 8.44015 16.7488 8.44015 16.0697C6.17515 16.5587 5.70348 15.0918 5.70348 15.0918C5.33948 14.1412 4.80015 13.8968 4.80015 13.8968C4.05881 13.3943 4.85415 13.3943 4.85415 13.3943C5.67648 13.4487 6.10798 14.2363 6.10798 14.2363C6.83581 15.4857 8.00865 15.1327 8.48048 14.9153C8.54781 14.3857 8.76365 14.019 8.99281 13.8153C7.18631 13.6252 5.28565 12.919 5.28565 9.76817C5.28565 8.87183 5.60898 8.1385 6.12131 7.56817C6.04048 7.3645 5.75731 6.52233 6.20231 5.39517C6.20231 5.39517 6.88981 5.17783 8.43998 6.23717C9.10366 6.05761 9.78811 5.96627 10.4756 5.9655C11.1631 5.9655 11.864 6.06067 12.5111 6.23717C14.0615 5.17783 14.749 5.39517 14.749 5.39517C15.194 6.52233 14.9106 7.3645 14.8298 7.56817C15.3556 8.1385 15.6656 8.87183 15.6656 9.76817C15.6656 12.919 13.765 13.6115 11.945 13.8153C12.2416 14.0733 12.4976 14.5622 12.4976 15.3363C12.4976 16.4363 12.4843 17.3192 12.4843 17.5907C12.4843 17.808 12.6326 18.0662 13.037 17.9847C16.2723 16.898 18.6045 13.8288 18.6045 10.2028C18.6178 5.66667 14.9646 2 10.4756 2Z" fill="currentColor"/>
+            </svg>
+          </span>
+        </a>
+        <a class="glowing-btn" href="https://signin.workos.com/sign-up?utm_source=authkit.com" target="_blank" rel="noopener noreferrer">
+          <span class="glowing-btn-text">Get started</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Hero Body -->
+    <main class="hero-section">
+      <!-- Atmospheric Background Canvas & Spotlights -->
+      <canvas class="ambient-canvas"></canvas>
+      
+      <div class="hero-spotlights">
+        <div class="spotlight-beam spotlight-1"></div>
+        <div class="spotlight-beam spotlight-2"></div>
+        <div class="spotlight-beam spotlight-3"></div>
+      </div>
+
+      <div class="hero-grid-guide"></div>
+      <div class="hero-crosshair" style="top: 140px; left: calc(50% - 240px);"></div>
+      <div class="hero-crosshair" style="top: 140px; right: calc(50% - 240px);"></div>
+
+      <!-- Hero Header & Logo -->
+      <div class="hero-center">
+        <div class="between-lines-wrapper">
+          <div class="badge-pill">
+            <span class="text-gradient">Introducing</span>
+          </div>
+        </div>
+
+        <div class="hero-logo-box outline-box-dots">
+          <!-- AuthKit Official Vector Wordmark -->
+          <svg class="hero-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 476 106" fill="none">
+            <path fill="url(#hero-logo-gradient)" d="M17.542 105H.168L38.42 2.8h20.002L96.528 105H78.57l-9.636-25.258H27.032L17.542 105ZM47.91 20.904l-16.206 44.53h32.558L47.91 20.904Zm106.172 46.72V30.248h15.768V105h-13.87l-1.752-9.49c-4.672 5.694-11.534 10.366-23.068 10.366-15.914 0-29.492-8.468-29.492-34.018v-41.61h15.768v39.858c0 14.6 5.84 22.046 17.374 22.046 11.972 0 19.272-9.052 19.272-24.528Zm30.138 17.082V9.37h15.768v20.878h18.104v13.87h-18.104V83.1c0 5.84 2.19 8.03 7.738 8.03h11.972V105h-15.184c-14.308 0-20.294-6.716-20.294-20.294Zm84.784-55.334c16.644 0 30.222 9.052 30.222 34.018V105h-15.768V64.704c0-14.162-6.278-21.754-17.958-21.754-12.41 0-20.002 9.198-20.002 24.236V105H229.73V2.8h15.768v38.252c4.672-6.424 11.826-11.68 23.506-11.68ZM315.172 105V2.8h16.79v52.706L378.828 2.8h20.44l-37.522 42.924L402.042 105h-20.294l-32.12-46.866-17.666 19.856V105h-16.79Zm102.522-85.264c-5.402 0-9.636-3.942-9.636-9.49s4.234-9.49 9.636-9.49c5.402 0 9.636 3.942 9.636 9.49s-4.234 9.49-9.636 9.49ZM409.664 105V30.248h15.768V105h-15.768Zm30.056-20.294V9.37h15.768v20.878h18.104v13.87h-18.104V83.1c0 5.84 2.19 8.03 7.738 8.03h11.972V105h-15.184c-14.308 0-20.294-6.716-20.294-20.294Z"/>
+            <defs>
+              <linearGradient id="hero-logo-gradient" x1="239" y1="125" x2="239" y2="-20" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#D8ECF8"/>
+                <stop offset="1" stop-color="#98C0EF"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <h2 class="hero-headline text-gradient">
+          The world’s best login box,<br/>powered by WorkOS + Radix.
+        </h2>
+      </div>
+
+      <!-- ======================================================================
+           3D FLOATING LOGIN CARDS SHOWCASE
+           ====================================================================== -->
+      <div class="hero-cards-stage">
+        
+        <!-- CARD 1 (LEFT): The Blamer -->
+        <div class="auth-card card-left" style="--brand-color: #EF6643; --brand-radius: 4px;">
+          <div class="auth-card-content">
+            <div class="auth-card-header">
+              <div class="auth-brand-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+              </div>
+              <h3 class="auth-card-title">Welcome to the Blamer</h3>
+              <p class="auth-card-subtitle">Log in to continue.</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="form-input" type="email" placeholder="Your email address" autocomplete="off" />
+            </div>
+            <button class="btn-primary" style="background-color: #EF6643;">Continue</button>
+            <p class="auth-card-footer">
+              Don't have an account? <a href="#" class="auth-card-link">Sign up</a>
+            </p>
+          </div>
+        </div>
+
+        <!-- CARD 2 (CENTER, ACTIVE): SuperApp -->
+        <div class="auth-card card-center auth-card-animated" style="--brand-color: #663AF3; --brand-radius: 999px;">
+          <div class="auth-card-content">
+            <div class="auth-card-header">
+              <div class="auth-brand-icon" style="background: rgba(102, 58, 243, 0.2); border-color: rgba(102, 58, 243, 0.4);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bad6f7" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+              </div>
+              <h3 class="auth-card-title">Sign in to SuperApp</h3>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="form-input" type="email" placeholder="Your email address" autocomplete="off" />
+            </div>
+            <button class="btn-primary">Continue</button>
+            
+            <div class="or-divider">OR</div>
+
+            <button class="btn-outline">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M15.883 8.184c0-.544-.045-1.09-.139-1.626H8.198v3.08h4.322a3.703 3.703 0 0 1-1.6 2.432v1.999h2.58c1.513-1.394 2.383-3.451 2.383-5.885Z"/>
+                <path d="M8.198 16c2.158 0 3.978-.708 5.303-1.931l-2.578-2c-.717.489-1.643.765-2.722.765-2.087 0-3.856-1.408-4.491-3.301H1.05v2.06A8.001 8.001 0 0 0 8.197 16Z"/>
+                <path d="M3.707 9.533a4.792 4.792 0 0 1 0-3.063V4.41H1.049a8.007 8.007 0 0 0 0 7.184l2.658-2.061Z"/>
+                <path d="M8.198 3.166a4.347 4.347 0 0 1 3.07 1.2L13.55 2.08A7.689 7.689 0 0 0 8.198.001 7.998 7.998 0 0 0 1.05 4.408L3.707 6.47c.632-1.896 2.404-3.304 4.491-3.304Z"/>
+              </svg>
+              Continue with Google
+            </button>
+            <button class="btn-outline">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="currentColor">
+                <path d="M.5 0h7.467v7.467H.5V0ZM9.033 0H16.5v7.467H9.033V0ZM9.033 8.533H16.5V16H9.033V8.533ZM.5 8.533h7.467V16H.5V8.533Z"/>
+              </svg>
+              Continue with Microsoft
+            </button>
+            <p class="auth-card-footer">
+              Don't have an account? <a href="#" class="auth-card-link">Sign up</a>
+            </p>
+          </div>
+        </div>
+
+        <!-- CARD 3 (RIGHT): Clamer (OTP 2FA) -->
+        <div class="auth-card card-right" style="--brand-color: #000000; --brand-radius: 2px;">
+          <div class="auth-card-content">
+            <div class="auth-card-header">
+              <div class="auth-brand-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <h3 class="auth-card-title">Sign in to Clamer</h3>
+              <p class="auth-card-subtitle">Enter the temporary passcode from your authenticator app.</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">One time code</label>
+              <div class="otp-container">
+                <input class="otp-box" type="text" maxlength="1" value="7" />
+                <input class="otp-box" type="text" maxlength="1" value="2" />
+                <input class="otp-box" type="text" maxlength="1" value="9" />
+                <input class="otp-box" type="text" maxlength="1" value="" />
+                <input class="otp-box" type="text" maxlength="1" value="" />
+                <input class="otp-box" type="text" maxlength="1" value="" />
+              </div>
+            </div>
+            <button class="btn-outline" style="margin-top: 4px;">Continue</button>
+            <p class="auth-card-footer">
+              <a href="#" class="auth-card-link">Return to sign in</a>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Light / Dark Theme Switch -->
+      <div class="light-switch-wrapper">
+        <div class="light-switch" id="themeSwitch" role="switch" aria-label="Toggle theme mode">
+          <div class="light-switch-thumb"></div>
+          <div class="switch-icon-dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </div>
+          <div class="switch-icon-light">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </div>
+        </div>
+        <p class="light-switch-caption">Light and dark modes supported.</p>
+      </div>
+
+    </main>
+
+    <div class="page-separator"></div>
+
+    <!-- ======================================================================
+         2. FEATURES SLIDER / TIMELINE STEPPER
+         ====================================================================== -->
+    <section class="features-slider-section">
+      <div class="features-slider-items">
+        
+        <div class="feature-slider-item active">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <span class="feature-label">Single Sign-On</span>
+          </div>
+          <div class="feature-separator pulse"></div>
+        </div>
+
+        <div class="feature-slider-item">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              </svg>
+            </div>
+            <span class="feature-label">Password</span>
+          </div>
+          <div class="feature-separator"></div>
+        </div>
+
+        <div class="feature-slider-item">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <span class="feature-label">Multi-Factor</span>
+          </div>
+          <div class="feature-separator"></div>
+        </div>
+
+        <div class="feature-slider-item">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="18" cy="5" r="3"/>
+                <circle cx="6" cy="12" r="3"/>
+                <circle cx="18" cy="19" r="3"/>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+              </svg>
+            </div>
+            <span class="feature-label">Social Login</span>
+          </div>
+          <div class="feature-separator"></div>
+        </div>
+
+        <div class="feature-slider-item">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <span class="feature-label">RBAC</span>
+          </div>
+          <div class="feature-separator"></div>
+        </div>
+
+        <div class="feature-slider-item">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <span class="feature-label">Magic Auth</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="page-separator"></div>
+
+    <!-- ======================================================================
+         3. EXTENSIBLE BY DESIGN - ARCHITECTURE DIAGRAM
+         ====================================================================== -->
+    <section class="dashboard-section">
+      <div class="section-header">
+        <div class="between-lines-wrapper">
+          <div class="badge-pill">
+            <span class="text-gradient">Extensible by design</span>
+          </div>
+        </div>
+        <h3 class="section-title text-gradient">
+          Your users. Your data.<br/>Maximum flexibility.
+        </h3>
+        <p class="section-desc">
+          AuthKit is compatible with any app architecture, allowing you to easily sync user updates via realtime APIs.
+        </p>
+      </div>
+
+      <!-- Animated Circuit Board -->
+      <div class="diagram-board">
+        <svg class="circuit-svg" viewBox="0 0 1000 560">
+          <path class="circuit-path" d="M 270 120 L 500 280" />
+          <path class="circuit-path" d="M 730 120 L 500 280" />
+          <path class="circuit-path" d="M 290 440 L 500 280" />
+          <path class="circuit-path" d="M 710 440 L 500 280" />
+
+          <!-- Dynamic Pulsing Light Rays -->
+          <path class="circuit-pulse" d="M 270 120 L 500 280" />
+          <path class="circuit-pulse" d="M 730 120 L 500 280" />
+          <path class="circuit-pulse" d="M 500 280 L 290 440" />
+          <path class="circuit-pulse" d="M 500 280 L 710 440" />
+        </svg>
+
+        <!-- Node 1: Your Application -->
+        <div class="diagram-node node-app">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <div class="node-title">Your Application</div>
+          <div class="node-sub">Next.js, Remix, Vite</div>
+        </div>
+
+        <!-- Node 2: AuthKit Client -->
+        <div class="diagram-node node-authkit">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="node-title">AuthKit UI</div>
+          <div class="node-sub">Radix-powered flows</div>
+        </div>
+
+        <!-- Node 3: Center Core WorkOS -->
+        <div class="diagram-node node-workos-core">
+          <div class="core-pulse-ring"></div>
+          <div class="node-icon" style="color: #663AF3;">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="node-title" style="font-size: 18px;">WorkOS Platform</div>
+          <div class="node-sub">Realtime sync, auth & directory</div>
+        </div>
+
+        <!-- Node 4: Database -->
+        <div class="diagram-node node-db">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+          </div>
+          <div class="node-title">Your Database</div>
+          <div class="node-sub">Postgres, PlanetScale, Dynamo</div>
+        </div>
+
+        <!-- Node 5: Realtime Events API -->
+        <div class="diagram-node node-events">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div class="node-title">Webhooks & Events</div>
+          <div class="node-sub">User lifecycle triggers</div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="page-separator"></div>
+
+    <!-- ======================================================================
+         4. INTERACTIVE BRAND CUSTOMIZER ("SHINE BRIGHT")
+         ====================================================================== -->
+    <section class="customizer-section">
+      <div class="section-header">
+        <div class="between-lines-wrapper">
+          <div class="badge-pill">
+            <span class="text-gradient">Shine bright</span>
+          </div>
+        </div>
+        <h2 class="section-title text-gradient">
+          Your brand. Your style.
+        </h2>
+        <p class="section-desc">
+          AuthKit can be fully customized to fit natively with your app’s unique design.
+        </p>
+      </div>
+
+      <!-- Browser Mockup Sandbox -->
+      <div class="browser-mockup">
+        <div class="browser-mockup-header">
+          <span class="browser-dot" style="background: #ef4444;"></span>
+          <span class="browser-dot" style="background: #f59e0b;"></span>
+          <span class="browser-dot" style="background: #10b981;"></span>
+        </div>
+
+        <div class="browser-content">
+          <!-- Canvas Stars in Background -->
+          <canvas class="ambient-canvas"></canvas>
+
+          <!-- 1. Color Picker Panel (Top Left) -->
+          <div class="customizer-panel panel-color">
+            <div class="panel-title">Colour</div>
+            <div class="color-swatches">
+              <div class="color-swatch" data-color="#EF6643" style="background: #EF6643;" title="Sunset Orange"></div>
+              <div class="color-swatch active" data-color="#663AF3" style="background: #663AF3;" title="Electric Purple"></div>
+              <div class="color-swatch" data-color="#027DEA" style="background: #027DEA;" title="WorkOS Blue"></div>
+              <div class="color-swatch" data-color="#269684" style="background: #269684;" title="Emerald Teal"></div>
+            </div>
+          </div>
+
+          <!-- 2. Appearance Preference (Left Middle) -->
+          <div class="customizer-panel panel-appearance">
+            <div class="panel-title">Preferred appearance</div>
+            <div class="appearance-pills">
+              <div class="appearance-pill" data-mode="system">System</div>
+              <div class="appearance-pill" data-mode="light">Light</div>
+              <div class="appearance-pill active" data-mode="dark">Dark</div>
+            </div>
+          </div>
+
+          <!-- 3. Border Radius Panel (Bottom Left) -->
+          <div class="customizer-panel panel-radius">
+            <div class="panel-title">Radius</div>
+            <div class="radius-grid">
+              <button class="radius-btn" data-radius="0px">0px</button>
+              <button class="radius-btn" data-radius="3px">3px</button>
+              <button class="radius-btn active" data-radius="6px">6px</button>
+              <button class="radius-btn" data-radius="999px">Pill</button>
+            </div>
+          </div>
+
+          <!-- 4. Logo Icon Picker (Middle Right) -->
+          <div class="customizer-panel panel-logos">
+            <div class="panel-title">Logo icon</div>
+            <div class="logo-grid">
+              <button class="logo-choice active" title="Globe Mesh">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+              </button>
+              <button class="logo-choice" title="Hexagon Crest">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+              </button>
+              <button class="logo-choice" title="Shield Lock">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </button>
+              <button class="logo-choice" title="Energy Node">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Floating Badges -->
+          <div class="floating-badge badge-button-color">
+            <span style="width: 10px; height: 10px; border-radius: 2px; background: #fff; display: inline-block;"></span>
+            <span>Button text: #FFFFFF</span>
+          </div>
+
+          <div class="floating-badge badge-link-color">
+            <span>Link color: Gradient</span>
+          </div>
+
+          <!-- Live Preview Card in Center -->
+          <div class="customizer-preview-card" id="customizerPreviewCard">
+            <div class="auth-card-content">
+              <div class="auth-card-header">
+                <div class="auth-brand-icon" id="previewCardLogo">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                </div>
+                <h3 class="auth-card-title">Sign in to SuperApp</h3>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input class="form-input" type="email" placeholder="Your email address" autocomplete="off" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Password</label>
+                <input class="form-input" type="password" placeholder="Enter your password" autocomplete="off" />
+              </div>
+
+              <button class="btn-primary">Continue</button>
+
+              <div class="or-divider">OR</div>
+
+              <button class="btn-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M15.883 8.184c0-.544-.045-1.09-.139-1.626H8.198v3.08h4.322a3.703 3.703 0 0 1-1.6 2.432v1.999h2.58c1.513-1.394 2.383-3.451 2.383-5.885Z"/>
+                  <path d="M8.198 16c2.158 0 3.978-.708 5.303-1.931l-2.578-2c-.717.489-1.643.765-2.722.765-2.087 0-3.856-1.408-4.491-3.301H1.05v2.06A8.001 8.001 0 0 0 8.197 16Z"/>
+                  <path d="M3.707 9.533a4.792 4.792 0 0 1 0-3.063V4.41H1.049a8.007 8.007 0 0 0 0 7.184l2.658-2.061Z"/>
+                  <path d="M8.198 3.166a4.347 4.347 0 0 1 3.07 1.2L13.55 2.08A7.689 7.689 0 0 0 8.198.001 7.998 7.998 0 0 0 1.05 4.408L3.707 6.47c.632-1.896 2.404-3.304 4.491-3.304Z"/>
+                </svg>
+                Continue with Google
+              </button>
+
+              <p class="auth-card-footer">
+                Don't have an account? <a href="#" class="auth-card-link">Sign up</a>
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="page-separator"></div>
+
+    <!-- ======================================================================
+         5. RADIX DESIGN SYSTEM SHOWCASE
+         ====================================================================== -->
+    <section class="radix-section">
+      <div class="section-header">
+        <div class="between-lines-wrapper">
+          <div class="badge-pill">
+            <span class="text-gradient">Framework freedom</span>
+          </div>
+        </div>
+        <h3 class="section-title text-gradient">
+          Built on Radix, the most popular<br/>open source design system.
+        </h3>
+        <p class="section-desc">
+          AuthKit is built with the same UI components used by Vercel, Linear, Supabase, and thousands of others.
+        </p>
+      </div>
+
+      <div class="radix-showcase-container">
+        <div class="radix-rotating-disk"></div>
+        <div class="radix-logo-wrapper">
+          <!-- Radix UI Geometric Emblem -->
+          <svg class="radix-mark-svg" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 25C18.6274 25 24 19.6274 24 13C24 6.37258 18.6274 1 12 1C5.37258 1 0 6.37258 0 13C0 19.6274 5.37258 25 12 25Z" fill="rgba(186, 214, 247, 0.08)"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 24C18.0751 24 23 19.0751 23 13C23 6.92487 18.0751 2 12 2C5.92487 2 1 6.92487 1 13C1 19.0751 5.92487 24 12 24ZM12 25C18.6274 25 24 19.6274 24 13C24 6.37258 18.6274 1 12 1C5.37258 1 0 6.37258 0 13C0 19.6274 5.37258 25 12 25Z" fill="rgba(186, 214, 247, 0.25)"/>
+            <path d="M12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17C14.7614 17 17 14.7614 17 12C17 9.23858 14.7614 7 12 7Z" fill="#bad6f7"/>
+          </svg>
+          <span style="font-family: var(--font-display); font-size: 20px; font-weight: 600; color: #bad6f7; letter-spacing: 0.05em;">RADIX UI</span>
+        </div>
+      </div>
+
+      <div class="radix-overlay-bar">
+        <a class="glowing-btn" href="https://radix-ui.com" target="_blank" rel="noopener noreferrer">
+          <span class="glowing-btn-text">Learn more about Radix</span>
+        </a>
+      </div>
+    </section>
+
+    <div class="page-separator"></div>
+
+    <!-- ======================================================================
+         6. ADVANCED SECURITY - 5 ENTERPRISE CARDS
+         ====================================================================== -->
+    <section class="security-section">
+      <div class="section-header">
+        <div class="between-lines-wrapper">
+          <div class="badge-pill">
+            <span class="text-gradient">Advanced security</span>
+          </div>
+        </div>
+        <h3 class="section-title text-gradient">
+          Designed for developers.<br/>Built for the enterprise.
+        </h3>
+        <p class="section-desc">
+          AuthKit supports enterprise-grade security with modern authentication and authorization standards.
+        </p>
+      </div>
+
+      <div class="security-grid">
+        
+        <!-- Security Card 1: Leaked Password Protection -->
+        <div class="security-card">
+          <div class="security-anim-area">
+            <div class="radar-box">
+              <div class="radar-sweep-line"></div>
+              <span>Sv1!qL+0318P7v20L1</span>
+              <div class="radar-check-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="security-card-label">Leaked password protection</div>
+        </div>
+
+        <!-- Security Card 2: Role-Based Access Control -->
+        <div class="security-card">
+          <div class="security-anim-area">
+            <div class="reader-unit">
+              <div class="reader-screen">ADMIN</div>
+              <div class="reader-keypad">
+                <div class="reader-key">●</div>
+                <div class="reader-key">■</div>
+                <div class="reader-key">▲</div>
+                <div class="reader-key">✕</div>
+              </div>
+            </div>
+          </div>
+          <div class="security-card-label">Role-Based Access Control</div>
+        </div>
+
+        <!-- Security Card 3: Password Strength Validation -->
+        <div class="security-card">
+          <div class="security-anim-area">
+            <div class="pwd-card-anim">
+              <div class="pwd-text-box" id="simPwdText">9#XmK!99_vLz</div>
+              <div class="strength-bars">
+                <div class="strength-bar green"></div>
+                <div class="strength-bar green"></div>
+                <div class="strength-bar green"></div>
+                <div class="strength-bar green"></div>
+              </div>
+            </div>
+          </div>
+          <div class="security-card-label">Password strength validation</div>
+        </div>
+
+        <!-- Security Card 4: Automatic Spam & Bot Detection -->
+        <div class="security-card">
+          <div class="security-anim-area">
+            <div class="bot-radar-circle">
+              <div class="bot-radar-sweep"></div>
+              <div class="radar-blip"></div>
+            </div>
+          </div>
+          <div class="security-card-label">Automatic spam and bot detection</div>
+        </div>
+
+        <!-- Security Card 5: Multi-Factor Authentication -->
+        <div class="security-card">
+          <div class="security-anim-area">
+            <div class="mfa-pills-row">
+              <div class="mfa-pill-box"><div class="mfa-dot"></div></div>
+              <div class="mfa-pill-box"><div class="mfa-dot"></div></div>
+              <div class="mfa-pill-box"><div class="mfa-dot"></div></div>
+              <div class="mfa-pill-box"><div class="mfa-dot"></div></div>
+              <div class="mfa-pill-box"><div class="mfa-dot"></div></div>
+              <div class="mfa-pill-box"><div class="mfa-dot"></div></div>
+            </div>
+          </div>
+          <div class="security-card-label">Multi-Factor Authentication</div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="page-separator"></div>
+
+    <!-- ======================================================================
+         7. FUTURE-PROOF YOUR APP
+         ====================================================================== -->
+    <section class="complete-section">
+      <div class="section-header">
+        <div class="between-lines-wrapper">
+          <div class="badge-pill">
+            <span class="text-gradient">Future-proof your app</span>
+          </div>
+        </div>
+        <h2 class="section-title text-gradient">
+          The one platform,<br/>for years of growth.
+        </h2>
+        <p class="section-desc">
+          AuthKit integrates seamlessly with WorkOS, the only end-to-end platform to make your app Enterprise Ready with SAML, SCIM, RBAC, and more.
+        </p>
+      </div>
+
+      <div class="complete-badges-cloud">
+        <div class="complete-badge-item">Email & Password</div>
+        <div class="complete-badge-item">Social Login</div>
+        <div class="complete-badge-item">Multi-Factor Auth</div>
+        <div class="complete-badge-item">Single Sign-On</div>
+        <div class="complete-badge-item">Directory Sync</div>
+        <div class="complete-badge-item">SCIM Provisioning</div>
+        <div class="complete-badge-item">Audit Logs</div>
+      </div>
+
+      <a class="glowing-btn" href="https://workos.com/user-management" target="_blank" rel="noopener noreferrer">
+        <span class="glowing-btn-text">Learn more about WorkOS User Management</span>
+      </a>
+    </section>
+
+    <div class="page-separator"></div>
+
+    <!-- ======================================================================
+         8. TESTIMONIALS SECTION
+         ====================================================================== -->
+    <section class="testimonials-section">
+      <div class="testimonials-grid">
+        
+        <!-- Meter Testimonial -->
+        <div class="testimonial-card">
+          <div class="testimonial-brand-logo">meter</div>
+          <p class="testimonial-quote">
+            “Integration was quick and AuthKit gave us full control over the UI. I have been involved with auth implementations for over a decade and this was a dead simple choice.”
+          </p>
+          <div class="testimonial-author">
+            <img class="author-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&crop=face" alt="Sean Rose" />
+            <div>
+              <div class="author-name">Sean Rose</div>
+              <div class="author-title">Product at Meter</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formal Testimonial -->
+        <div class="testimonial-card">
+          <div class="testimonial-brand-logo">formal</div>
+          <p class="testimonial-quote">
+            “The migration to WorkOS was straightforward and has freed up so much of our engineering resources. AuthKit is a game changer for handling user logins.”
+          </p>
+          <div class="testimonial-author">
+            <img class="author-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=face" alt="Mokhtar Bacha" />
+            <div>
+              <div class="author-name">Mokhtar Bacha</div>
+              <div class="author-title">Founder at Formal</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="page-separator"></div>
+
+    <!-- ======================================================================
+         9. START BUILDING TODAY (CALL TO ACTION)
+         ====================================================================== -->
+    <section class="cta-section">
+      <div class="cta-header-box outline-box-dots">
+        <h3 class="cta-header-title text-gradient">Start building today</h3>
+      </div>
+
+      <div class="cta-boxes-grid">
+        
+        <!-- CTA 1: Hosted AuthKit -->
+        <a href="https://workos.com/docs/user-management" target="_blank" rel="noopener noreferrer" class="cta-box">
+          <div class="cta-box-center-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="cta-box-title">Use hosted AuthKit</div>
+          <div class="cta-box-desc">The fastest way to launch.</div>
+        </a>
+
+        <!-- CTA 2: GitHub Code -->
+        <a href="https://github.com/workos/authkit" target="_blank" rel="noopener noreferrer" class="cta-box">
+          <div class="cta-box-center-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+          </div>
+          <div class="cta-box-title">View code on GitHub</div>
+          <div class="cta-box-desc">Host your own frontend.</div>
+        </a>
+
+      </div>
+
+      <div class="cta-action-wrap outline-box-dots">
+        <a class="glowing-btn" href="https://x.com/authkit" target="_blank" rel="noopener noreferrer">
+          <span class="glowing-btn-text">
+            Follow @AuthKit on 
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 300 300" fill="currentColor">
+              <path d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59H300M36.01 19.54h40.65l187.13 262.13h-40.66"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
