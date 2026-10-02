@@ -5,6 +5,7 @@ import json
 import random
 import psutil
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 print("Loading pre-generated email samples...")
 with open("data/pregenerated_emails.json", "r", encoding="utf-8") as f:
     samples = json.load(f)
