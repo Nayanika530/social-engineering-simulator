@@ -1,577 +1,758 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Engineering Attack Simulator & Threat Detector | LLM Security</title>
-    <meta name="description" content="Simulate, analyze, and classify social engineering and phishing attacks with dual-system AI combining fine-tuned language generation and real-time threat classification.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css?v=2.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>Social Engineering Attack Simulator & Threat Detector</title>
+  <meta name="description" content="Dual-system AI platform: fine-tuned language models generate realistic social engineering attacks, and real-time machine learning classifies threat probability in milliseconds." />
+  <meta property="og:title" content="Social Engineering Simulator & Threat Detector" />
+  <meta property="og:description" content="Simulate, analyze, and detect social engineering and phishing attacks with dual-system AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css?v=3.0" />
 </head>
 <body>
+  <div class="page-wrapper">
 
-    <!-- 1. Top Announcement Bar (Emerald Green) -->
-    <div class="announcement-bar" id="announcementBar">
-        <span class="announcement-pill">New</span>
-        <span>Dual-System Social Engineering Attack Simulator & Detector v2.0 is live!</span>
-        <a href="#simulator" class="announcement-link">
-            Launch Simulator
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    <!-- ======================================================================
+         1. TOP NAVIGATION (AUTHKIT STYLE)
+         ====================================================================== -->
+    <header class="hero-header">
+      <div class="hero-brand">
+        <a href="/" class="hero-brand-logo" title="Social Engineering Simulator">
+          <div class="hero-brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <span class="hero-brand-text">SENG SIMULATOR</span>
         </a>
-    </div>
+        <span class="hero-brand-badge">RESEARCH v2.0</span>
+      </div>
 
-    <!-- 2. Navigation Header -->
-    <header class="header">
-        <div class="nav-container">
-            <a href="/" class="brand-logo">
-                <div class="brand-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        <path d="M9 12l2 2 4-4"/>
-                    </svg>
-                </div>
-                <span>SENG SIMULATOR</span>
-                <span class="brand-badge">RESEARCH</span>
-            </a>
+      <!-- Navigation Links -->
+      <ul class="hero-nav-links">
+        <li><a href="#simulator" class="hero-nav-link">Attack Simulator</a></li>
+        <li><a href="#pipeline" class="hero-nav-link">Pipeline Stepper</a></li>
+        <li><a href="#architecture" class="hero-nav-link">Architecture</a></li>
+        <li><a href="#metrics" class="hero-nav-link">Telemetry</a></li>
+        <li><a href="#code" class="hero-nav-link">API Integration</a></li>
+      </ul>
 
-            <ul class="nav-links">
-                <li class="nav-item"><a href="#simulator">Attack Simulator</a></li>
-                <li class="nav-item"><a href="#presets">Quick Presets</a></li>
-                <li class="nav-item"><a href="#metrics">Model Metrics</a></li>
-                <li class="nav-item"><a href="#features">Architecture</a></li>
-            </ul>
-
-            <div class="nav-actions">
-                <a href="https://github.com/Nayanika530/social-engineering-simulator" target="_blank" rel="noopener noreferrer" class="btn-secondary">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                    </svg>
-                    GitHub
-                </a>
-                <a href="#simulator" class="btn-primary-pill">
-                    Simulate Attack
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-            </div>
-        </div>
+      <!-- Right Navigation Actions -->
+      <div class="hero-nav-right">
+        <a class="glowing-btn" href="https://github.com/Nayanika530/social-engineering-simulator" target="_blank" rel="noopener noreferrer" style="width: 40px; padding: 0;" title="View on GitHub">
+          <span class="glowing-btn-text">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+          </span>
+        </a>
+        <a class="glowing-btn" href="#simulator">
+          <span class="glowing-btn-text">
+            <span>Simulate Attack</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </span>
+        </a>
+      </div>
     </header>
 
-    <!-- 3. Hero Section (CheckPhish Layout) -->
-    <main>
-        <section class="hero-section">
-            <div class="hero-pill-badge">
-                <span class="dot"></span>
-                <span>Offense & Defense AI Simulator • Dual Model System</span>
+    <!-- ======================================================================
+         2. HERO SECTION & ATMOSPHERE
+         ====================================================================== -->
+    <main class="hero-section" id="simulator">
+      <!-- Stardust Canvas & Dynamic Spotlights -->
+      <canvas class="ambient-canvas"></canvas>
+      
+      <div class="hero-spotlights">
+        <div class="spotlight-beam spotlight-1"></div>
+        <div class="spotlight-beam spotlight-2"></div>
+        <div class="spotlight-beam spotlight-3"></div>
+      </div>
+
+      <div class="hero-grid-guide"></div>
+      <div class="hero-crosshair" style="top: 150px; left: calc(50% - 280px);"></div>
+      <div class="hero-crosshair" style="top: 150px; right: calc(50% - 280px);"></div>
+
+      <!-- Hero Header & Headline -->
+      <div class="hero-center">
+        <div class="between-lines-wrapper">
+          <div class="badge-pill">
+            <span class="pill-dot"></span>
+            <span class="text-gradient">Introducing Dual-System AI Defense</span>
+          </div>
+        </div>
+
+        <div class="hero-emblem-box outline-box-dots">
+          <!-- AuthKit-Styled Cyber Shield Emblem -->
+          <svg class="hero-emblem-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 4L6 12v14c0 11.5 7.6 22.3 18 25 10.4-2.7 18-13.5 18-25V12L24 4z" fill="url(#hero-emblem-grad)" fill-opacity="0.2" stroke="url(#hero-emblem-grad)" stroke-width="2"/>
+            <path d="M24 14l-7 7h5v11h4V21h5l-7-7z" fill="url(#hero-emblem-grad)"/>
+            <defs>
+              <linearGradient id="hero-emblem-grad" x1="6" y1="4" x2="42" y2="44" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#D8ECF8"/>
+                <stop offset="0.5" stop-color="#98C0EF"/>
+                <stop offset="1" stop-color="#663AF3"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="hero-emblem-text">SENG SIMULATOR</span>
+        </div>
+
+        <h1 class="hero-headline text-gradient">
+          The world’s best social engineering simulator,<br/>powered by fine-tuned LLMs + ML.
+        </h1>
+
+        <p class="hero-subheadline">
+          Simulate the dynamic offense/defense reality in modern phishing attacks: a fine-tuned language model generates realistic corporate spearphishing attacks, while a high-precision ML classifier evaluates threat probability in real time.
+        </p>
+      </div>
+
+      <!-- ======================================================================
+           3. 3D FLOATING SHOWCASE STAGE (AUTHKIT CARDS)
+           ====================================================================== -->
+      <div class="hero-cards-stage">
+
+        <!-- CARD 1 (LEFT): Direct Raw Email Classifier -->
+        <div class="auth-card card-left" id="directCard" style="--brand-color: #3b82f6;">
+          <div class="auth-card-content">
+            <div class="auth-card-header">
+              <div class="auth-brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <h3 class="auth-card-title">Direct Vector Scanner</h3>
+              <p class="auth-card-subtitle">Score any raw email against 17,537 trained vectors</p>
             </div>
 
-            <h1 class="hero-title">
-                Detect, Simulate, and Classify <span class="highlight">Social Engineering Attacks</span>
-            </h1>
+            <div class="form-group">
+              <label class="form-label" for="customEmailText">
+                <span>Raw Email Body</span>
+                <span style="font-family: var(--font-mono); font-size: 10px; color: var(--body-muted);">TF-IDF n-grams</span>
+              </label>
+              <textarea id="customEmailText" class="form-textarea" placeholder="Paste incoming email headers or message body here to evaluate threat probability..."></textarea>
+            </div>
 
-            <p class="hero-subtitle">
-                A dual-system AI architecture: fine-tuned language generation crafts realistic corporate phishing scenarios, while a high-precision ML classifier evaluates threat probability in real time.
+            <button id="btnClassify" class="btn-outline" onclick="classifyCustomText()">
+              <span class="spinner" id="classifySpinner"></span>
+              <span>Classify Raw Email Text</span>
+            </button>
+
+            <p style="font-size: 11.5px; color: var(--body-muted); text-align: center; margin-top: 4px;">
+              Click this card to focus into center stage
             </p>
+          </div>
+        </div>
 
-            <!-- 4. CheckPhish-Style Scanner Box -->
-            <div class="scanner-wrapper" id="simulator">
-                <div class="scanner-box">
-                    
-                    <!-- Scanner Tabs -->
-                    <div class="scanner-tabs">
-                        <button class="tab-btn active" onclick="switchTab('sim-tab')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                            Attack Simulator
-                            <span class="tab-badge">Active</span>
-                        </button>
-                        <button class="tab-btn" onclick="switchTab('presets-tab')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
-                            Quick Presets
-                        </button>
-                        <button class="tab-btn" onclick="switchTab('direct-tab')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                            Direct Email Classifier
-                        </button>
-                    </div>
-
-                    <!-- Tab Content -->
-                    <div class="tab-content">
-                        
-                        <!-- Tab 1: Attack Simulator -->
-                        <div id="sim-tab" class="tab-panel active">
-                            <div class="input-grid">
-                                <div class="input-group">
-                                    <label class="input-label" for="scenario">
-                                        Attack Scenario
-                                    </label>
-                                    <div class="input-field-wrap">
-                                        <span class="field-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                        </span>
-                                        <input type="text" id="scenario" class="text-input" placeholder="e.g. IT password reset" value="IT password reset">
-                                    </div>
-                                </div>
-
-                                <div class="input-group">
-                                    <label class="input-label" for="target_role">
-                                        Target Role
-                                    </label>
-                                    <div class="input-field-wrap">
-                                        <span class="field-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                        </span>
-                                        <input type="text" id="target_role" class="text-input" placeholder="e.g. Finance Manager" value="Finance Manager">
-                                    </div>
-                                </div>
-
-                                <div class="input-group">
-                                    <label class="input-label" for="company">
-                                        Target Company
-                                    </label>
-                                    <div class="input-field-wrap">
-                                        <span class="field-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7v14M21 7v14M6 10h.01M6 14h.01M6 18h.01M18 10h.01M18 14h.01M18 18h.01M10 3h4v18h-4z"/></svg>
-                                        </span>
-                                        <input type="text" id="company" class="text-input" placeholder="e.g. Acme Corp" value="Acme Corp">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="scanner-actions">
-                                <div class="action-hint">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-                                    <span>Trained on 17,537 samples • Real-time TF-IDF inference</span>
-                                </div>
-                                <button id="btnGenerate" class="btn-scan" onclick="generateAttack()">
-                                    <span class="spinner" id="simSpinner"></span>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                                    <span>Generate & Assess Attack</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Tab 2: Quick Presets -->
-                        <div id="presets-tab" class="tab-panel">
-                            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 12px;">Select a simulated scenario preset to automatically populate the simulator:</p>
-                            <div class="preset-chips" id="presets">
-                                <button class="preset-chip" onclick="applyPreset('IT Mandatory Password Reset', 'Security Analyst', 'Apex Financial')">
-                                    🔐 IT Mandatory Password Reset
-                                </button>
-                                <button class="preset-chip" onclick="applyPreset('Urgent Wire Transfer Authorization', 'Finance Director', 'Global Retail Inc')">
-                                    💸 Urgent Wire Transfer (BEC)
-                                </button>
-                                <button class="preset-chip" onclick="applyPreset('Annual HR Benefits Enrollment', 'Senior Software Engineer', 'CloudScale Technologies')">
-                                    📋 Annual HR Benefits Enrollment
-                                </button>
-                                <button class="preset-chip" onclick="applyPreset('Cloud SSO Access Revocation Warning', 'DevOps Lead', 'FinTech Dynamics')">
-                                    ☁️ Cloud SSO Access Warning
-                                </button>
-                                <button class="preset-chip" onclick="applyPreset('Vendor Invoice Immediate Payment Notice', 'Accounts Payable', 'Nexus Manufacturing')">
-                                    📑 Overdue Vendor Invoice
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Tab 3: Direct Email Classifier -->
-                        <div id="direct-tab" class="tab-panel">
-                            <label class="input-label" for="customEmailText" style="margin-bottom: 8px;">
-                                Paste Any Email Body for Immediate Phishing Threat Scoring:
-                            </label>
-                            <textarea id="customEmailText" class="textarea-input" placeholder="Paste incoming email header and body here to classify threat probability..."></textarea>
-                            <div class="scanner-actions">
-                                <div class="action-hint">
-                                    <span>Evaluates against 17,537 verified phishing & ham email vectors</span>
-                                </div>
-                                <button id="btnClassify" class="btn-scan" onclick="classifyCustomText()">
-                                    <span class="spinner" id="classifySpinner"></span>
-                                    <span>Classify Email Text</span>
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- 5. Threat Assessment Result Card (CheckPhish Style) -->
-                <div id="resultSection" class="result-section">
-                    <div class="report-card">
-                        
-                        <div class="report-header">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <div id="statusBadge" class="report-status-badge badge-phishing">
-                                    <span class="dot"></span>
-                                    <span id="threatStatusText">Phishing Threat Detected</span>
-                                </div>
-                                <span style="font-size: 0.8125rem; color: var(--text-muted);">Real-Time ML Assessment</span>
-                            </div>
-
-                            <div class="confidence-gauge">
-                                <span style="font-size: 0.8125rem; color: var(--text-muted); font-weight: 500;">Confidence:</span>
-                                <div class="confidence-bar-wrap">
-                                    <div id="confidenceBar" class="confidence-bar-fill" style="width: 85%;"></div>
-                                </div>
-                                <span id="confidenceVal" class="confidence-value">85.0%</span>
-                            </div>
-                        </div>
-
-                        <div class="report-body">
-                            
-                            <!-- Email Viewport -->
-                            <div class="email-viewport">
-                                <div class="email-meta-header">
-                                    <div class="email-meta-row">
-                                        <span class="meta-label">From:</span>
-                                        <span class="meta-val" id="metaSender">Security Alert &lt;notify@corp-update-notice.com&gt;</span>
-                                    </div>
-                                    <div class="email-meta-row">
-                                        <span class="meta-label">To:</span>
-                                        <span class="meta-val" id="metaRecipient">Target Role</span>
-                                    </div>
-                                    <div class="email-meta-row">
-                                        <span class="meta-label">Subject:</span>
-                                        <span class="meta-val" id="metaSubject">Urgent Security Notice</span>
-                                    </div>
-                                </div>
-                                <div class="email-content-view" id="emailContent">
-                                    <!-- Email body populated dynamically -->
-                                </div>
-                            </div>
-
-                            <!-- Threat Breakdown Panel -->
-                            <div class="threat-meta-panel">
-                                <div class="meta-info-card">
-                                    <div class="meta-info-title">Simulated Attack Vector</div>
-                                    <div class="meta-info-value" id="vectorName">Social Engineering Spearphishing</div>
-                                    <div class="meta-info-sub" id="vectorSub">Personalized target role and entity spoofing</div>
-                                </div>
-
-                                <div class="meta-info-card">
-                                    <div class="meta-info-title">Target Profile</div>
-                                    <div class="meta-info-value" id="profileRole">Finance Manager</div>
-                                    <div class="meta-info-sub" id="profileCompany">Acme Corp</div>
-                                </div>
-
-                                <div class="meta-info-card">
-                                    <div class="meta-info-title">Model Decision Engine</div>
-                                    <div class="meta-info-value">TF-IDF + Logistic Reg</div>
-                                    <div class="meta-info-sub">Trained on 17,537 phishing/ham emails (97.75% acc)</div>
-                                </div>
-
-                                <div class="report-actions">
-                                    <button class="btn-report-action" onclick="copyEmailContent()">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                                        <span id="copyBtnText">Copy Email</span>
-                                    </button>
-                                    <button class="btn-report-action" onclick="generateAttack()">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
-                                        Re-Simulate
-                                    </button>
-                                    <button class="btn-report-action" onclick="dismissResult()">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-
+        <!-- CARD 2 (CENTER ACTIVE): Attack Simulator -->
+        <div class="auth-card card-center auth-card-animated" id="simCard" style="--brand-color: #663AF3;">
+          <div class="auth-card-content">
+            <div class="auth-card-header">
+              <div class="auth-brand-icon" style="background: rgba(102, 58, 243, 0.2); border: 1px solid rgba(102, 58, 243, 0.4);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bad6f7" stroke-width="2">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+              </div>
+              <h3 class="auth-card-title">Simulate Targeted Attack</h3>
+              <p class="auth-card-subtitle">Fine-tuned GPT-2 generator + real-time ML defense</p>
             </div>
-        </section>
 
-        <!-- 6. Metrics Counter Banner (CheckPhish Dark Theme with Emerald Glow) -->
-        <section class="stats-banner" id="metrics">
-            <div class="stats-container">
-                <div class="stat-item">
-                    <div class="stat-number">17,537<span class="accent">+</span></div>
-                    <div class="stat-label">Verified Email Samples</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">97.75<span class="accent">%</span></div>
-                    <div class="stat-label">Model Classifier Accuracy</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">&lt; 200<span class="accent">ms</span></div>
-                    <div class="stat-label">Live Threat Assessment Speed</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">5,594<span class="accent"></span></div>
-                    <div class="stat-label">Fine-Tuning Phishing Prompts</div>
-                </div>
+            <!-- Inputs -->
+            <div class="form-group">
+              <label class="form-label" for="scenario">Attack Scenario</label>
+              <input type="text" id="scenario" class="form-input" placeholder="e.g. IT password reset" value="IT password reset" autocomplete="off" />
             </div>
-        </section>
 
-        <!-- 7. Features Grid (CheckPhish 3-Card Layout) -->
-        <section class="features-section" id="features">
-            <span class="section-tag">AI Architecture</span>
-            <h2 class="section-heading">How the Dual-System Pipeline Works</h2>
-            <p class="section-subheading">A modern offense vs. defense AI dynamic designed to understand attacker psychology and strengthen automated detection.</p>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon-wrap">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">System 1: Attack Generator</h3>
-                    <p class="feature-desc">
-                        Fine-tuned on 5,594 real phishing emails to generate scenario-specific social engineering attacks tailored dynamically by target role, organization, and context.
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon-wrap">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                            <circle cx="12" cy="11" r="3"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">System 2: Threat Classifier</h3>
-                    <p class="feature-desc">
-                        TF-IDF n-gram vectorizer paired with Logistic Regression trained on 17,537 curated samples. Achieves 97.75% test accuracy with probabilistic threat confidence scoring.
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon-wrap">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                            <line x1="8" y1="21" x2="16" y2="21"/>
-                            <line x1="12" y1="17" x2="12" y2="21"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">Real-Time Defense Dynamic</h3>
-                    <p class="feature-desc">
-                        Connects offense and defense: evaluates how AI-generated spearphishing vectors interact with automated detection filters, highlighting vulnerabilities before adversaries exploit them.
-                    </p>
-                </div>
+            <div class="form-group">
+              <label class="form-label" for="target_role">Target Role</label>
+              <input type="text" id="target_role" class="form-input" placeholder="e.g. Finance Manager" value="Finance Manager" autocomplete="off" />
             </div>
-        </section>
 
-        <!-- 8. Call To Action Banner -->
-        <section class="cta-section">
-            <div class="cta-box">
-                <div class="cta-content">
-                    <h3>Explore the Complete Code & Notebooks</h3>
-                    <p>Access the dataset cleaning pipeline, Hugging Face GPT-2 fine-tuning notebook, and scikit-learn model artifacts on GitHub.</p>
-                </div>
-                <a href="https://github.com/Nayanika530/social-engineering-simulator" target="_blank" rel="noopener noreferrer" class="btn-cta-light">
-                    View on GitHub
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
+            <div class="form-group">
+              <label class="form-label" for="company">Target Company</label>
+              <input type="text" id="company" class="form-input" placeholder="e.g. Acme Corp" value="Acme Corp" autocomplete="off" />
             </div>
-        </section>
+
+            <!-- Quick Presets -->
+            <div class="presets-wrap">
+              <span class="presets-label">Quick Attack Presets:</span>
+              <div class="preset-pills">
+                <button class="preset-pill" onclick="applyPreset('IT Mandatory Password Reset', 'Security Analyst', 'Apex Financial')">
+                  🔐 Password Reset
+                </button>
+                <button class="preset-pill" onclick="applyPreset('Urgent Wire Transfer Authorization', 'Finance Director', 'Global Retail Inc')">
+                  💸 Wire Transfer (BEC)
+                </button>
+                <button class="preset-pill" onclick="applyPreset('Cloud SSO Access Revocation Warning', 'DevOps Lead', 'FinTech Dynamics')">
+                  ☁️ Cloud SSO
+                </button>
+                <button class="preset-pill" onclick="applyPreset('Annual HR Benefits Enrollment', 'Senior Engineer', 'CloudScale')">
+                  📋 HR Benefits
+                </button>
+              </div>
+            </div>
+
+            <button id="btnGenerate" class="btn-primary" onclick="generateAttack()">
+              <span class="spinner" id="simSpinner"></span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span>Generate & Assess Attack</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- CARD 3 (RIGHT): Model Telemetry & Accuracy -->
+        <div class="auth-card card-right" id="telemetryCard" style="--brand-color: #10b981;">
+          <div class="auth-card-content">
+            <div class="auth-card-header">
+              <div class="auth-brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="M9 12l2 2 4-4"/>
+                </svg>
+              </div>
+              <h3 class="auth-card-title">Model Telemetry</h3>
+              <p class="auth-card-subtitle">Real-time classification & training metrics</p>
+            </div>
+
+            <div class="telemetry-grid">
+              <div class="telemetry-item">
+                <div class="telemetry-val">97.75%</div>
+                <div class="telemetry-lbl">Test Accuracy</div>
+              </div>
+              <div class="telemetry-item">
+                <div class="telemetry-val">&lt; 200ms</div>
+                <div class="telemetry-lbl">Inference Latency</div>
+              </div>
+              <div class="telemetry-item">
+                <div class="telemetry-val">17,537</div>
+                <div class="telemetry-lbl">Labeled Samples</div>
+              </div>
+              <div class="telemetry-item">
+                <div class="telemetry-val">5,594</div>
+                <div class="telemetry-lbl">Tuning Prompts</div>
+              </div>
+            </div>
+
+            <div style="background: rgba(186, 214, 247, 0.03); border: 1px solid rgba(186, 215, 247, 0.1); border-radius: 8px; padding: 10px 12px; margin-top: 4px;">
+              <div style="font-size: 11.5px; color: var(--body-muted);">Pipeline Architecture</div>
+              <div style="font-size: 12.5px; font-weight: 500; color: #bad6f7; margin-top: 2px;">
+                TF-IDF + Logistic Regression
+              </div>
+            </div>
+
+            <button class="btn-outline" onclick="document.getElementById('architecture').scrollIntoView({ behavior: 'smooth' })">
+              <span>View Architecture Board</span>
+            </button>
+
+            <p style="font-size: 11.5px; color: var(--body-muted); text-align: center; margin-top: 4px;">
+              Click this card to focus into center stage
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ======================================================================
+           4. AUTHKIT LIGHT / DARK SWITCH
+           ====================================================================== -->
+      <div class="light-switch-wrapper">
+        <div class="light-switch" id="themeSwitch" role="switch" aria-label="Toggle theme mode">
+          <div class="light-switch-thumb"></div>
+          <div class="switch-icon-dark" title="Dark Mode">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </div>
+          <div class="switch-icon-light" title="Light Mode">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </div>
+        </div>
+        <p class="light-switch-caption">Light and dark modes supported.</p>
+      </div>
+
+      <!-- ======================================================================
+           5. THREAT ASSESSMENT RESULT CARD / MODAL (AUTHKIT LUXURY GLASS)
+           ====================================================================== -->
+      <div id="resultSection" class="result-section">
+        <div class="report-card">
+          
+          <div class="report-header">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div id="statusBadge" class="report-status-badge badge-phishing">
+                <span class="dot"></span>
+                <span id="threatStatusText">High-Risk Spearphishing Threat</span>
+              </div>
+              <span style="font-size: 12px; color: var(--body-muted);">Real-Time ML Assessment</span>
+            </div>
+
+            <div class="confidence-gauge">
+              <span style="font-size: 12px; color: var(--body-muted);">Confidence:</span>
+              <div class="confidence-bar-wrap">
+                <div id="confidenceBar" class="confidence-bar-fill" style="width: 95%;"></div>
+              </div>
+              <span id="confidenceVal" class="confidence-value">95.0%</span>
+            </div>
+          </div>
+
+          <div class="report-body">
+            
+            <!-- Email Client Viewport -->
+            <div class="email-viewport">
+              <div class="email-meta-header">
+                <div class="email-meta-row">
+                  <span class="meta-label">From:</span>
+                  <span class="meta-val" id="metaSender">Security Alert &lt;notify@corp-update-notice.com&gt;</span>
+                </div>
+                <div class="email-meta-row">
+                  <span class="meta-label">To:</span>
+                  <span class="meta-val" id="metaRecipient">Target Role</span>
+                </div>
+                <div class="email-meta-row">
+                  <span class="meta-label">Subject:</span>
+                  <span class="meta-val" id="metaSubject">Urgent Notice</span>
+                </div>
+              </div>
+              <div class="email-content-view" id="emailContent">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Threat Metadata Panel -->
+            <div class="threat-meta-panel">
+              <div class="meta-info-card">
+                <div class="meta-info-title">Simulated Attack Vector</div>
+                <div class="meta-info-value" id="vectorName">Social Engineering Spearphishing</div>
+                <div class="meta-info-sub">Personalized target role and organizational spoofing</div>
+              </div>
+
+              <div class="meta-info-card">
+                <div class="meta-info-title">Target Profile</div>
+                <div class="meta-info-value" id="profileRole">Finance Manager</div>
+                <div class="meta-info-sub" id="profileCompany">Acme Corp</div>
+              </div>
+
+              <div class="meta-info-card">
+                <div class="meta-info-title">Model Decision Engine</div>
+                <div class="meta-info-value">TF-IDF + Logistic Regression</div>
+                <div class="meta-info-sub">17,537 training vectors (97.75% acc)</div>
+              </div>
+
+              <div class="report-actions">
+                <button class="btn-report-action" onclick="copyEmailContent()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span id="copyBtnText">Copy Email Body</span>
+                </button>
+                <button class="btn-report-action" onclick="generateAttack()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                  Re-Simulate Attack
+                </button>
+                <button class="btn-report-action" onclick="dismissResult()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  Close Report
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
     </main>
 
-    <!-- 9. Footer (CheckPhish Dark Slate Style) -->
+    <div class="page-separator"></div>
+
+    <!-- ======================================================================
+         6. FEATURES TIMELINE / STEPPER (AUTHKIT TIMELINE)
+         ====================================================================== -->
+    <section class="features-slider-section" id="pipeline">
+      <div class="features-slider-items">
+        
+        <div class="feature-slider-item active">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <span class="feature-label">Persona Config</span>
+          </div>
+          <div class="feature-separator pulse"></div>
+        </div>
+
+        <div class="feature-slider-item">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <span class="feature-label">GPT-2 Generator</span>
+          </div>
+          <div class="feature-separator"></div>
+        </div>
+
+        <div class="feature-slider-item">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+            </div>
+            <span class="feature-label">TF-IDF 17.5k</span>
+          </div>
+          <div class="feature-separator"></div>
+        </div>
+
+        <div class="feature-slider-item">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <span class="feature-label">Logistic Reg</span>
+          </div>
+          <div class="feature-separator"></div>
+        </div>
+
+        <div class="feature-slider-item">
+          <div class="feature-icon-container">
+            <div class="feature-icon-bubble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <span class="feature-label">Threat Score</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="stepper-desc-box" id="timelineDesc">
+        <strong>1. Persona & Scenario Config</strong> — Attacker parameters configured dynamically: attacker impersonates trusted departmental entities and tailors target role context.
+      </div>
+    </section>
+
+    <div class="page-separator"></div>
+
+    <!-- ======================================================================
+         7. EXTENSIBLE ARCHITECTURE DIAGRAM (AUTHKIT CIRCUIT BOARD)
+         ====================================================================== -->
+    <section class="dashboard-section" id="architecture">
+      <div class="section-header">
+        <div class="between-lines-wrapper">
+          <div class="badge-pill">
+            <span class="text-gradient">Offense vs. Defense Pipeline</span>
+          </div>
+        </div>
+        <h2 class="section-title text-gradient">
+          Dual-System Architecture.<br/>Extensible by Design.
+        </h2>
+        <p class="section-desc">
+          Connecting generative attack modeling with statistical defensive filters to uncover email security vulnerabilities before adversaries exploit them.
+        </p>
+      </div>
+
+      <!-- Animated Circuit Board -->
+      <div class="diagram-board">
+        <svg class="circuit-svg" viewBox="0 0 1000 540">
+          <path class="circuit-path" d="M 270 120 L 500 270" />
+          <path class="circuit-path" d="M 730 120 L 500 270" />
+          <path class="circuit-path" d="M 290 420 L 500 270" />
+          <path class="circuit-path" d="M 710 420 L 500 270" />
+
+          <!-- Dynamic Pulsing Light Rays -->
+          <path class="circuit-pulse" d="M 270 120 L 500 270" />
+          <path class="circuit-pulse" d="M 730 120 L 500 270" />
+          <path class="circuit-pulse" d="M 500 270 L 290 420" />
+          <path class="circuit-pulse" d="M 500 270 L 710 420" />
+        </svg>
+
+        <!-- Node 1: Target Inputs -->
+        <div class="diagram-node node-inputs">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="node-title">Target Parameters</div>
+          <div class="node-sub">Role, Company & Scenario Context</div>
+        </div>
+
+        <!-- Node 2: Generator Model -->
+        <div class="diagram-node node-generator">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <div class="node-title">Attack Generator (Sys 1)</div>
+          <div class="node-sub">Fine-tuned on 5,594 Phishing Prompts</div>
+        </div>
+
+        <!-- Node 3: Center Core Engine -->
+        <div class="diagram-node node-core-engine">
+          <div class="core-pulse-ring"></div>
+          <div class="node-icon" style="color: #663AF3;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="node-title" style="font-size: 17px;">Classifier Core (Sys 2)</div>
+          <div class="node-sub">Logistic Regression • 97.75% Acc</div>
+        </div>
+
+        <!-- Node 4: Dataset Vectors -->
+        <div class="diagram-node node-dataset">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+          </div>
+          <div class="node-title">17,537 Vectors</div>
+          <div class="node-sub">TF-IDF Sub-Word Extraction</div>
+        </div>
+
+        <!-- Node 5: Threat Output -->
+        <div class="diagram-node node-defense">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div class="node-title">Threat Telemetry</div>
+          <div class="node-sub">&lt; 200ms Calibrated Scoring</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         8. METRICS BANNER (AUTHKIT STYLE)
+         ====================================================================== -->
+    <section class="stats-banner" id="metrics">
+      <div class="stats-container">
+        <div class="stat-item">
+          <div class="stat-number">17,537<span class="accent">+</span></div>
+          <div class="stat-label">Verified Email Samples</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">97.75<span class="accent">%</span></div>
+          <div class="stat-label">Model Classifier Accuracy</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">&lt; 200<span class="accent">ms</span></div>
+          <div class="stat-label">Live Threat Assessment Speed</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">5,594<span class="accent"></span></div>
+          <div class="stat-label">Fine-Tuning Attack Prompts</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         9. ENTERPRISE DEFENSE SIMULATIONS (AUTHKIT CARDS)
+         ====================================================================== -->
+    <section class="security-section">
+      <div class="section-header" style="margin-bottom: 20px;">
+        <div class="between-lines-wrapper">
+          <div class="badge-pill">
+            <span class="text-gradient">Verification Capabilities</span>
+          </div>
+        </div>
+        <h2 class="section-title text-gradient">
+          Simulated Defense Mechanics
+        </h2>
+        <p class="section-desc">
+          Automated analysis simulating enterprise mail gateway heuristics and behavioral detection patterns.
+        </p>
+      </div>
+
+      <div class="security-grid">
+        <!-- 1. Radar Vector Sweep -->
+        <div class="security-card">
+          <div class="security-anim-area">
+            <div class="radar-box">
+              <div class="radar-sweep-line"></div>
+              <span>SCANNING_VECTOR</span>
+              <div class="radar-check-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="security-card-label">Sub-word N-gram Lexical Tokenizer</div>
+        </div>
+
+        <!-- 2. Bot Radar -->
+        <div class="security-card">
+          <div class="security-anim-area">
+            <div class="bot-radar-circle">
+              <div class="bot-radar-sweep"></div>
+              <div class="radar-blip"></div>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #98c0ef; z-index: 2;">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 2v3m0 14v3M2 12h3m14 0h3"/>
+              </svg>
+            </div>
+          </div>
+          <div class="security-card-label">Spoofed Sender Identity Analysis</div>
+        </div>
+
+        <!-- 3. Threat Calibration Bars -->
+        <div class="security-card">
+          <div class="security-anim-area">
+            <div class="pwd-card-anim">
+              <div class="pwd-text-box">CONFIDENCE_SCORE</div>
+              <div class="strength-bars">
+                <div class="strength-bar green"></div>
+                <div class="strength-bar green"></div>
+                <div class="strength-bar green"></div>
+                <div class="strength-bar green"></div>
+              </div>
+            </div>
+          </div>
+          <div class="security-card-label">Probabilistic Logistic Calibration</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         10. CODE INTEGRATION SECTION (AUTHKIT TABS)
+         ====================================================================== -->
+    <section class="code-section" id="code">
+      <div class="section-header" style="margin-bottom: 30px;">
+        <div class="between-lines-wrapper">
+          <div class="badge-pill">
+            <span class="text-gradient">Developer Integration</span>
+          </div>
+        </div>
+        <h2 class="section-title text-gradient">
+          Simple, Powerful API
+        </h2>
+        <p class="section-desc">
+          Easily trigger attack simulations or query live classification scores via JSON REST endpoints.
+        </p>
+      </div>
+
+      <div class="code-box">
+        <div class="code-header">
+          <div class="code-tabs">
+            <button class="code-tab active" data-lang="python">Python</button>
+            <button class="code-tab" data-lang="curl">cURL</button>
+            <button class="code-tab" data-lang="javascript">JavaScript</button>
+            <button class="code-tab" data-lang="sklearn">Scikit-Learn</button>
+          </div>
+          <button class="btn-copy-code" id="copyCodeBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span>Copy Code</span>
+          </button>
+        </div>
+        <pre class="code-pre" id="codeDisplay">import requests
+
+# Simulate social engineering attack payload
+response = requests.post("http://localhost:5000/generate_attack", json={
+    "scenario": "IT password reset",
+    "target_role": "Finance Manager",
+    "company": "Acme Corp"
+})
+
+result = response.json()
+print("Threat Level:", result["threat_level"])
+print("Confidence:", result["confidence"], "%")
+print("Generated Payload:\n", result["generated_email"])</pre>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         11. CALL TO ACTION (CTA)
+         ====================================================================== -->
+    <section class="cta-section">
+      <div class="cta-box outline-box-dots">
+        <h3 class="cta-title">Explore Dataset, Notebooks & Source Code</h3>
+        <p class="cta-desc">
+          Access the complete Kaggle dataset cleaning pipeline, Hugging Face GPT-2 fine-tuning notebook, and serialized scikit-learn model artifacts.
+        </p>
+        <a class="glowing-btn" href="https://github.com/Nayanika530/social-engineering-simulator" target="_blank" rel="noopener noreferrer">
+          <span class="glowing-btn-text">
+            <span>View Repository on GitHub</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         12. FOOTER (AUTHKIT STYLE)
+         ====================================================================== -->
     <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <h4>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
-                    SENG SIMULATOR
-                </h4>
-                <p>
-                    An open-source AI cybersecurity research project simulating the offense/defense dynamic in modern social engineering attacks.
-                </p>
-            </div>
-
-            <div class="footer-col">
-                <h5>Platform</h5>
-                <ul class="footer-links">
-                    <li><a href="#simulator">Attack Simulator</a></li>
-                    <li><a href="#presets">Scenario Presets</a></li>
-                    <li><a href="#metrics">Classifier Metrics</a></li>
-                    <li><a href="#features">Architecture</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h5>Dataset & Research</h5>
-                <ul class="footer-links">
-                    <li><a href="https://www.kaggle.com/datasets/subhajournal/phishingemails" target="_blank" rel="noopener">Kaggle Phishing Dataset</a></li>
-                    <li><a href="https://huggingface.co/docs/transformers" target="_blank" rel="noopener">Hugging Face Transformers</a></li>
-                    <li><a href="https://scikit-learn.org" target="_blank" rel="noopener">Scikit-Learn</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h5>Author</h5>
-                <ul class="footer-links">
-                    <li><span style="color: #ffffff; font-weight: 600;">Nayanika Halder</span></li>
-                    <li><span>B.Tech CSE (Cybersecurity)</span></li>
-                    <li><span>MAKAUT</span></li>
-                    <li><a href="https://github.com/Nayanika530" target="_blank" rel="noopener" style="color: #34d399;">github.com/Nayanika530</a></li>
-                </ul>
-            </div>
+      <div class="footer-container">
+        <div class="footer-brand">
+          <h4>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#663af3" stroke-width="2.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            SENG SIMULATOR
+          </h4>
+          <p>
+            An open-source AI cybersecurity research project simulating the offense/defense dynamic in modern social engineering attacks.
+          </p>
         </div>
 
-        <div class="footer-bottom">
-            <span>© 2026 Social Engineering Simulator. Developed for academic and cybersecurity defense research.</span>
-            <span>CheckPhish-inspired UI with Emerald Green Theme</span>
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <ul class="footer-links">
+            <li><a href="#simulator">Attack Simulator</a></li>
+            <li><a href="#pipeline">Pipeline Stepper</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#metrics">Classifier Metrics</a></li>
+          </ul>
         </div>
+
+        <div class="footer-col">
+          <h5>Research & Data</h5>
+          <ul class="footer-links">
+            <li><a href="https://www.kaggle.com/datasets/subhajournal/phishingemails" target="_blank" rel="noopener">Kaggle Phishing Dataset</a></li>
+            <li><a href="https://huggingface.co/docs/transformers" target="_blank" rel="noopener">Hugging Face Transformers</a></li>
+            <li><a href="https://scikit-learn.org" target="_blank" rel="noopener">Scikit-Learn</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Author</h5>
+          <ul class="footer-links">
+            <li><span style="color: #fff; font-weight: 600;">Nayanika Halder</span></li>
+            <li><span>B.Tech CSE (Cybersecurity)</span></li>
+            <li><span>MAKAUT</span></li>
+            <li><a href="https://github.com/Nayanika530" target="_blank" rel="noopener" style="color: #98c0ef;">github.com/Nayanika530</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Social Engineering Simulator. Developed for academic and cybersecurity defense research.</span>
+        <span>AuthKit-inspired UI/UX with Glowing Conic Aesthetics & Dark Luxury Mode</span>
+      </div>
     </footer>
 
-    <!-- Client-Side JavaScript Logic -->
-    <script>
-        // Tab Switching
-        function switchTab(tabId) {
-            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-            document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  </div>
 
-            const targetBtn = Array.from(document.querySelectorAll(".tab-btn")).find(btn => {
-                return (tabId === 'sim-tab' && btn.textContent.includes('Simulator')) ||
-                       (tabId === 'presets-tab' && btn.textContent.includes('Presets')) ||
-                       (tabId === 'direct-tab' && btn.textContent.includes('Direct'));
-            });
-
-            if (targetBtn) targetBtn.classList.add("active");
-            const panel = document.getElementById(tabId);
-            if (panel) panel.classList.add("active");
-        }
-
-        // Preset Apply
-        function applyPreset(scenario, role, company) {
-            document.getElementById("scenario").value = scenario;
-            document.getElementById("target_role").value = role;
-            document.getElementById("company").value = company;
-            switchTab('sim-tab');
-            generateAttack();
-        }
-
-        // Generate Attack
-        async function generateAttack() {
-            const scenario = document.getElementById("scenario").value.trim() || "IT password reset";
-            const target_role = document.getElementById("target_role").value.trim() || "Finance Manager";
-            const company = document.getElementById("company").value.trim() || "Acme Corp";
-
-            const btn = document.getElementById("btnGenerate");
-            const spinner = document.getElementById("simSpinner");
-            btn.disabled = true;
-            spinner.style.display = "inline-block";
-
-            try {
-                const response = await fetch("/generate_attack", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ scenario, target_role, company })
-                });
-
-                if (!response.ok) {
-                    throw new Error("Server returned status " + response.status);
-                }
-
-                const data = await response.json();
-                renderResults(data, scenario, target_role, company);
-            } catch (err) {
-                alert("Error simulating attack: " + err.message + "\nIf Render is waking up, please allow a few seconds.");
-            } finally {
-                btn.disabled = false;
-                spinner.style.display = "none";
-            }
-        }
-
-        // Classify Custom Text
-        async function classifyCustomText() {
-            const emailText = document.getElementById("customEmailText").value.trim();
-            if (!emailText) {
-                alert("Please paste email text to classify.");
-                return;
-            }
-
-            const btn = document.getElementById("btnClassify");
-            const spinner = document.getElementById("classifySpinner");
-            btn.disabled = true;
-            spinner.style.display = "inline-block";
-
-            try {
-                const response = await fetch("/classify_text", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email_text: emailText })
-                });
-
-                if (!response.ok) {
-                    throw new Error("Server returned status " + response.status);
-                }
-
-                const data = await response.json();
-                renderResults(data, "Custom Input Analysis", "Direct Recipient", "Enterprise Domain");
-            } catch (err) {
-                alert("Error classifying email: " + err.message);
-            } finally {
-                btn.disabled = false;
-                spinner.style.display = "none";
-            }
-        }
-
-        // Render Results Card
-        function renderResults(data, scenario, target_role, company) {
-            const resultSection = document.getElementById("resultSection");
-            const statusBadge = document.getElementById("statusBadge");
-            const threatStatusText = document.getElementById("threatStatusText");
-            const confidenceBar = document.getElementById("confidenceBar");
-            const confidenceVal = document.getElementById("confidenceVal");
-            const emailContent = document.getElementById("emailContent");
-            const metaRecipient = document.getElementById("metaRecipient");
-            const metaSubject = document.getElementById("metaSubject");
-            const vectorName = document.getElementById("vectorName");
-            const profileRole = document.getElementById("profileRole");
-            const profileCompany = document.getElementById("profileCompany");
-
-            const isPhishing = data.threat_level === "Phishing";
-
-            // Status Badge & Colors
-            if (isPhishing) {
-                statusBadge.className = "report-status-badge badge-phishing";
-                threatStatusText.textContent = "🚨 Phishing Threat Detected";
-                confidenceBar.style.backgroundColor = "#dc2626";
-            } else {
-                statusBadge.className = "report-status-badge badge-safe";
-                threatStatusText.textContent = "🛡️ Legitimate / Safe Communication";
-                confidenceBar.style.backgroundColor = "#059669";
-            }
-
-            // Confidence
-            const conf = data.confidence || 95.0;
-            confidenceBar.style.width = conf + "%";
-            confidenceVal.textContent = conf + "%";
-
-            // Email Metadata & Content
-            metaRecipient.textContent = `${target_role} <${target_role.toLowerCase().replace(/\s+/g, '.')}@${company.toLowerCase().replace(/\s+/g, '')}.com>`;
-            metaSubject.textContent = `Action Required: ${scenario} - ${company}`;
-            emailContent.textContent = data.generated_email;
-
-            // Sidebar details
-            vectorName.textContent = scenario;
-            profileRole.textContent = target_role;
-            profileCompany.textContent = company;
-
-            // Show Section
-            resultSection.style.display = "block";
-            resultSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }
-
-        // Copy Email Action
-        function copyEmailContent() {
-            const text = document.getElementById("emailContent").textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                const btnText = document.getElementById("copyBtnText");
-                btnText.textContent = "Copied!";
-                setTimeout(() => { btnText.textContent = "Copy Email"; }, 2000);
-            });
-        }
-
-        // Dismiss Result Card
-        function dismissResult() {
-            document.getElementById("resultSection").style.display = "none";
-        }
-    </script>
+  <!-- Client-Side JavaScript -->
+  <script src="/static/js/main.js?v=3.0"></script>
 </body>
 </html>
