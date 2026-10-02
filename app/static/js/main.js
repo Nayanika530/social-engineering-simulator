@@ -658,6 +658,18 @@ async function checkUrlSafety() {
           flagsList.appendChild(li);
         });
       }
+
+      // Update dynamic disclaimer based on risk_level
+      const disclaimer = document.getElementById("urlDisclaimer");
+      if (disclaimer) {
+        if (data.risk_level === "High Risk") {
+          disclaimer.textContent = "Heuristic analysis only. Multiple suspicious patterns detected — treat this link as dangerous.";
+        } else if (data.risk_level === "Medium Risk") {
+          disclaimer.textContent = "Heuristic analysis only. Exercise caution — some suspicious patterns were detected.";
+        } else {
+          disclaimer.textContent = "Heuristic analysis only. A Low Risk result does not guarantee that the URL is safe.";
+        }
+      }
     }
   } catch (err) {
     alert("Error checking URL: " + err.message);

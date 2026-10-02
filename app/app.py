@@ -291,16 +291,18 @@ def analyze_url_heuristics(raw_url: str):
         high_risk_count += 1
 
     # C. Brand impersonation (Weight: 40)
-    # Applied strictly to the hostname/domain only; path contents are excluded.
-    # Normalizes common leetspeak substitutions (1->l, 0->o, 5->s, 3->e) to detect typosquatting.
+    # Searches for known brand names (paypal, amazon, google, microsoft, apple, netflix)
+    # as a substring anywhere in the URL (not just the domain) and flags it unless the domain
+    # is an exact match to the real brand domain (or its authentic subdomains).
     leet_trans = str.maketrans({"1": "l", "0": "o", "5": "s", "3": "e"})
-    norm_hostname = hostname.translate(leet_trans)
+    url_lower = url_stripped.lower()
+    norm_url = url_lower.translate(leet_trans)
 
     brand_impersonated = False
     for brand, legit_domain in KNOWN_BRANDS.items():
         is_legit = (hostname == legit_domain or hostname.endswith("." + legit_domain))
         if not is_legit:
-            if brand in hostname or brand in norm_hostname:
+            if brand in url_lower or brand in norm_url:
                 brand_impersonated = True
                 break
 
@@ -328,7 +330,22 @@ def analyze_url_heuristics(raw_url: str):
         medium_risk_count += 1
 
     # F. Suspicious/rare TLD (Weight: 20)
-    if any(hostname.endswith(tld) for tld in SUSPICIOUS_TLDS):
+    # Checks the domain/hostname ending as well as path/embedded domain endings (e.g. for IP+path phishing URLs)
+    is_suspicious_tld = False
+    path_lower = (parsed.path or "").lower()
+    path_segments = [s for s in path_lower.split("/") if s]
+
+    for tld in SUSPICIOUS_TLDS:
+        # Check if the hostname/netloc ends with the suspicious TLD
+        if hostname.endswith(tld):
+            is_suspicious_tld = True
+            break
+        # Check if the path or any path segment ends with the suspicious TLD
+        if path_lower.endswith(tld) or any(seg.endswith(tld) for seg in path_segments):
+            is_suspicious_tld = True
+            break
+
+    if is_suspicious_tld:
         flags_triggered.append("URL uses a suspicious or commonly abused TLD")
         score += 20
         medium_risk_count += 1
