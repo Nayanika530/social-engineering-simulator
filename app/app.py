@@ -377,11 +377,12 @@ def analyze_url_heuristics(raw_url: str):
 
     # Risk mapping:
     # - Any high-risk flag present                          -> High Risk
+    # - URL shortener flag present (always at least Medium) -> Medium Risk
     # - No high-risk flags AND 2 or more medium-risk flags  -> Medium Risk
     # - Otherwise                                           -> Low Risk
     if high_risk_count > 0:
         risk_level = "High Risk"
-    elif medium_risk_count >= 2:
+    elif is_shortener or medium_risk_count >= 2:
         risk_level = "Medium Risk"
     else:
         risk_level = "Low Risk"
